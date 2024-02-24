@@ -15,7 +15,7 @@ const getCart= asyncHander(async(req,res)=>{
 });
 
 const createNewCart =asyncHander( async (req, res,next) => {
-        const { productId } = req.body;
+        const { productId,quantity } = req.body;
         const { email } = req.user;
         // Validate the request body
         const { error } = newCartVaildatin(req.body);
@@ -42,7 +42,7 @@ const createNewCart =asyncHander( async (req, res,next) => {
         if (!cart) {
             cart = await Cart.create({
                 user: user._id ,
-                cartItems: [{product: product._id, titel: product.title , price: product.price  }]
+                cartItems: [{product: product._id, titel: product.title , price: product.price,quantity:quantity  }]
             });
         } else {
             //find index of product in cart
@@ -50,9 +50,9 @@ const createNewCart =asyncHander( async (req, res,next) => {
                  item.product.toString() === productId)
               console.log(productIndex )
               if(productIndex>-1){
-                cart.cartItems[productIndex].quantity++;
+                cart.cartItems[productIndex].quantity +=quantity;
               }else{
-                cart.cartItems.push({product: product._id, titel: product.title , price: product.price });
+                cart.cartItems.push({product: product._id, titel: product.title , price: product.price ,quantity});
               }
             // calculate total price of product
             let totalPrice=0;
