@@ -2,7 +2,6 @@ const userService = require("../services/userService");
 const ProfileService=require('../services/profileService')
 const profileValidator = require('../validation/profile.validator');
 const bcrypt = require("bcrypt");
-
 const getCurrentUser= async (req, res) => {
     try {
         const user = await userService.findUserService(req.body.email);

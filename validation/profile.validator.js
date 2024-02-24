@@ -9,3 +9,4 @@ const userSchema = Joi.object({
 });
 
 module.exports = userSchema;
+

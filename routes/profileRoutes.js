@@ -6,4 +6,5 @@ const {auth} = require("../middleware/auth");
 router.get("/",auth, profileController.getCurrentUser);
 router.patch("/:id",auth, profileController.updateProfile);
 
+
 module.exports = router;
