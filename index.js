@@ -25,7 +25,6 @@ app.use('/api/v1/products', productRoutes);
 //cart route
 app.use('/api/v1/cart',cartRouter)
 
-app.use(errorHandler);
 
 
 ////////////////// amal 
