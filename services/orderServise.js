@@ -1,7 +1,11 @@
 
+const Order=require("../models/order")
 
 
-
-
-
-// module.exports={ge}
+const getOrdersServise=async()=>{
+    return await Order.find();
+}
+const getOrderByIdServise=async(orderId)=>{
+    return await Order.findById(orderId)
+}
+module.exports={getOrdersServise,getOrderByIdServise}
