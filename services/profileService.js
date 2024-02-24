@@ -8,6 +8,7 @@ const updatedUser = {
   lname: { type: String },
   email: { type: String },
   password: { type: String },
+  role:{type:String}
 };
 const updateProfile = async (email, updatedUser) => {
   return await User.findByIdAndUpdate(email, updatedUser, {

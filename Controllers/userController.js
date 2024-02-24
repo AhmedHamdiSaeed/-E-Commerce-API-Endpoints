@@ -8,9 +8,10 @@ const User = require("../models/User");
 
 const register = async (req, res) => {
   try {
-       const { error } = profileValidator.validate(req.body);
-       if (error) throw error;
-    const { fname, lname, email, password } = req.body;
+    const { error } = profileValidator.validate(req.body);
+    if (error) throw error;
+
+    const { fname, lname, email, password, role } = req.body; 
     if (!email || !password)
       return res
         .status(422)
@@ -19,8 +20,7 @@ const register = async (req, res) => {
     const user = await findUserService(email);
     if (user)
       return res.status(409).send({
-        message:
-          "This email is already registered. Please choose another email.",
+        message: "This email is already registered. Please choose another email.",
       });
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -30,16 +30,16 @@ const register = async (req, res) => {
       lname,
       email,
       password: passwordHash,
+      role, 
     });
     res.send(newUser);
   } catch (error) {
-    res
-      .status(500)
-      .send({
-        message: error.message || "An error occurred while creating the user.",
-      });
+    res.status(500).send({
+      message: error.message || "An error occurred while creating the user.",
+    });
   }
 };
+
 
 const login = async (req, res) => {
   try {

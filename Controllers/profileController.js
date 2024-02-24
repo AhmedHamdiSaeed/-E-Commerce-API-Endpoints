@@ -25,6 +25,7 @@ const updateProfile = async (req, res) => {
           lname,
           email,
           passwordHash,
+          role
         });
         if (!user) throw new Error('User not found');
 
