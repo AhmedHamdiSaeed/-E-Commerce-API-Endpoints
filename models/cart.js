@@ -15,13 +15,14 @@ cartItems:[{
     price:{
         type:Number,
     },
+
 }],
 totalprice:{
     type:Number,
    
 },
 user:{
-    type:mongoose.Schema.ObjectId,
+    type:mongoose.Schema.Types.ObjectId,
     ref:'User'
 }
 ,
