@@ -12,7 +12,6 @@ const getCurrentUser= async (req, res) => {
         res.status(404).send(error.message );
     }
 };
-
 const updateProfile = async (req, res) => {
     try {
         const { error } = profileValidator.validate(req.body);
