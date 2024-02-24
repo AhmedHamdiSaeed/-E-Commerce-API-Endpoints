@@ -9,6 +9,8 @@ const errorHandler=require("./middleware/errorMiddleware")
 
 //routes
 const userRoutes=require("./routes/userRoutes")
+const profileRoutes=require("./routes/profileRoutes")
+const cartRouter=require("./routes/cartRoutes")
 const productRoutes=require("./routes/productRoutes")
 const ordersRoutes=require("./routes/ordersRoutes")
 const CategoryRoutes=require("./routes/categoryRoutes")
@@ -20,7 +22,12 @@ app.use(express.json())
 
 app.use('/api/v1', userRoutes);
 app.use('/api/v1/products', productRoutes);
-
+//cart route
+app.use('/api/v1/cart',cartRouter)
+app.all("*",(req,res,next)=>{
+    next(new customError("can't found this route",500));
+})
+app.use(errorHandler);
 
 
 ////////////////// amal 
