@@ -25,16 +25,15 @@ app.use('/api/v1', userRoutes);
 app.use('/api/v1/products', productRoutes);
 //cart route
 app.use('/api/v1/cart',cartRouter)
-<<<<<<< HEAD
+
 app.use('/api/v1/search',searchRoute)
 
 app.all("*",(req,res,next)=>{
     next(new customError("can't found this route",500));
 })
 app.use(errorHandler);
-=======
 
->>>>>>> 035b915f63fd9094e7d434459321826827b27bc9
+
 
 
 ////////////////// amal 
