@@ -32,27 +32,24 @@ const productSchema = new mongoose.Schema
     colors: {
         type: [String],
         default: ['#fffff'],
-        required: true,
       },
       category: {
-        type: String,
+        type: mongoose.Schema.ObjectId,
+        ref:"Category",
         required: [true, 'Pleaze provide product "category" '],
-        enum:{
-            values:  ['office','kitchen'],
-            message: '{Value} is not supported'
-        }
       },
       company: {
         type: String,
         required: [true, 'Pleaze provide "company"'],
-        enum: {
-          values: ['ikea', 'marcos'],
-          message: '{Value} is not supported',
-        }
     },
     priceAfterDiscount:{
         type:Number
     },
+    sold:{
+        type:Number,
+        default:0
+    }
+    ,
         user: {
             type: mongoose.Types.ObjectId,
             ref: 'User',

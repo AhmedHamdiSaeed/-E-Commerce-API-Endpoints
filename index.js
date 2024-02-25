@@ -6,7 +6,6 @@ const errorHandler=require("./middleware/errorMiddleware")
 
 
 //
-const Cart=require("./models/cart")
 
 //routes
 const userRoutes=require("./routes/userRoutes")
@@ -17,6 +16,7 @@ const productRoutes=require("./routes/productRoutes")
 const ordersRoutes=require("./routes/ordersRoutes")
 const CategoryRoutes=require("./routes/categoryRoutes")
 const { auth } = require("./middleware/auth")
+const { isAdmin } = require("./middleware/AdminUserAuth")
 
 const app=express();
 app.use(express.json())
@@ -25,12 +25,16 @@ app.use('/api/v1', userRoutes);
 app.use('/api/v1/products', productRoutes);
 //cart route
 app.use('/api/v1/cart',cartRouter)
+<<<<<<< HEAD
 app.use('/api/v1/search',searchRoute)
 
 app.all("*",(req,res,next)=>{
     next(new customError("can't found this route",500));
 })
 app.use(errorHandler);
+=======
+
+>>>>>>> 035b915f63fd9094e7d434459321826827b27bc9
 
 
 ////////////////// amal 
@@ -68,11 +72,8 @@ app.use(errorHandler);
 ////////// ahmed
 
 
-app.use("/orders",auth,ordersRoutes)
-app.all("*",(req,res,next)=>{
-    next(new customError("can't found this route",500));
-})
-app.use(errorHandler);
+app.use("/api/v1/orders",ordersRoutes)
+
 
 
 
@@ -88,7 +89,10 @@ app.use("/category",CategoryRoutes)
 
 
 
-
+app.all("*",(req,res,next)=>{
+    next(new customError("can't found this route",500));
+})
+app.use(errorHandler);
 
 
 app.listen(process.env.PORT,()=>console.log("running"))
