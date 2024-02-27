@@ -14,6 +14,7 @@ const profileRoutes=require("./routes/profileRoutes")
 const productRoutes=require("./routes/productRoutes")
 const ordersRoutes=require("./routes/ordersRoutes")
 const CategoryRoutes=require("./routes/categoryRoutes")
+const AdminRouter=require("./routes/adminRoutes")
 const { auth } = require("./middleware/auth")
 
 const app=express();
@@ -77,6 +78,7 @@ app.use(errorHandler);
 ///////////emad
 app.use("/category",CategoryRoutes)
 
+app.use("/api/v1/admin",auth,AdminRouter)
 
 
 

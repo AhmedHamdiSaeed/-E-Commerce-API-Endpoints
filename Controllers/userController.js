@@ -1,5 +1,5 @@
 const {
-  findUserService
+  findUserService, getAllUserservices
 } = require("../services/userService");
 const profileValidator=require("../validation/profile.validator")
 const bcrypt = require("bcrypt");
@@ -70,7 +70,20 @@ const login = async (req, res) => {
   }
 };
 
+
+const getAllUsers = async (req , res , next)=>{
+  try {
+    const users = await getAllUserservices();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+
+}
+
 module.exports = {
   register,
   login,
+  getAllUsers
 };

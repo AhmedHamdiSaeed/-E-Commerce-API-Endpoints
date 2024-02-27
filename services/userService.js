@@ -11,7 +11,12 @@ const findUserService = async (email) => {
   return await User.findOne({ email });
 };
 
+const getAllUserservices = async (email) => {
+  return await User.find();
+};
+
 module.exports = {
   createUserService,
   findUserService,
+  getAllUserservices
 };
