@@ -10,6 +10,7 @@ const errorHandler=require("./middleware/errorMiddleware")
 //routes
 const userRoutes=require("./routes/userRoutes")
 const profileRoutes=require("./routes/profileRoutes")
+const searchRoute=require("./routes/searchRoutes")
 const cartRouter=require("./routes/cartRoutes")
 const productRoutes=require("./routes/productRoutes")
 const ordersRoutes=require("./routes/ordersRoutes")
@@ -24,6 +25,14 @@ app.use('/api/v1', userRoutes);
 app.use('/api/v1/products', productRoutes);
 //cart route
 app.use('/api/v1/cart',cartRouter)
+
+app.use('/api/v1/search',searchRoute)
+
+app.all("*",(req,res,next)=>{
+    next(new customError("can't found this route",500));
+})
+app.use(errorHandler);
+
 
 
 
