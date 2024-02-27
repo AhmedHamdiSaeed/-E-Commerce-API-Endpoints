@@ -28,9 +28,6 @@ app.use('/api/v1/cart',cartRouter)
 
 app.use('/api/v1/search',searchRoute)
 
-app.all("*",(req,res,next)=>{
-    next(new customError("can't found this route",500));
-})
 app.use(errorHandler);
 
 

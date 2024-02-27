@@ -14,5 +14,5 @@ router.get("/:id",auth,getOrderById)
 //  Cancel an existing order
 router.patch("/:id/cancel",auth,cancelOrder)
 //checkout session
-router.get("/checkout-session/:cartId",auth,checkoutSession)
+router.get("/checkoutSession/:cartId",auth,checkoutSession)
 module.exports=router;
