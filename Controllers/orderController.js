@@ -4,7 +4,8 @@ const AsyncHandler = require("express-async-handler");
 const customError = require("../Utils/customError");
 const Product = require("../models/Product");
 const { getOrderByIdServise,getOrdersServise} = require("../services/orderServise");
-const Stripe= require("stripe")(process.env.Stripe_Secrete);
+require("dotenv").config()
+const stripe= require('stripe')('sk_test_51OoAdfHKyTd2gxdff0ItjSCSspETGmOHRAdVfdWai1V9XgzUkfMoMeZDXPcqV6yFxq8GYeziBX5FLDXTYKgy30BZ00dh7Rbr7W');
 
 const createOrder=AsyncHandler(async(req,res,next)=>{
     const cartId=req.body.cartId;
@@ -65,6 +66,14 @@ const cancelOrder=AsyncHandler(async(req,res,next)=>{
     if(order.user.toString()===req.user.id)
     {
         order.status="Canceled";
+          //decrement Sold and increment quantity in Product
+    const Bulkoption=order.cartItems.map((item)=>({
+        updateOne:{
+            filter:{_id:item.product},update:{$inc:{quantity: +item.quantity,sold: -item.quantity}}
+        }
+    }));
+    Product.bulkWrite(Bulkoption,{})
+
         const updatedOrder=await order.save();
         res.status(200).json({status:"success",data:updatedOrder})
     }
@@ -73,31 +82,4 @@ const cancelOrder=AsyncHandler(async(req,res,next)=>{
  
 })
 
-const checkoutSession=AsyncHandler(async(req,res,next)=>{
-    const cart= await Cart.findById(req.params.cartId);
-
-
-    if(!cart) return next(next(new customError("not found cadt")));
-
-    const shippingPrice=0;
-    const taxPrice=0;
-
-    const totalprice=shippingPrice+taxPrice+cart.totalprice;
-
-    const session= await Stripe.Checkout.session.create({
-        line_items:[
-            {
-                name:req.user.name,
-                amount:totalprice,
-                currency:'egp',
-                quantity:1,
-            }],
-            mode:'payment',
-            success_url:`${req.protocol}://${req.get('host')}/orders`,
-            cancel_url:`${req.protocol}://${req.get('host')}/cart`
-    });
-
-    res.status(200).send({status:'success',session})
-})
-
-module.exports={createOrder,getOrderes,getOrderById,cancelOrder,checkoutSession}
+module.exports={createOrder,getOrderes,getOrderById,cancelOrder}
