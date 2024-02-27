@@ -4,6 +4,7 @@ const AsyncHandler = require("express-async-handler");
 const customError = require("../Utils/customError");
 const Product = require("../models/Product");
 const { getOrderByIdServise,getOrdersServise} = require("../services/orderServise");
+const Stripe= require("stripe")(process.env.Stripe_Secrete);
 
 const createOrder=AsyncHandler(async(req,res,next)=>{
     const cartId=req.body.cartId;
@@ -72,5 +73,31 @@ const cancelOrder=AsyncHandler(async(req,res,next)=>{
  
 })
 
+const checkoutSession=AsyncHandler(async(req,res,next)=>{
+    const cart= await Cart.findById(req.params.cartId);
 
-module.exports={createOrder,getOrderes,getOrderById,cancelOrder}
+
+    if(!cart) return next(next(new customError("not found cadt")));
+
+    const shippingPrice=0;
+    const taxPrice=0;
+
+    const totalprice=shippingPrice+taxPrice+cart.totalprice;
+
+    const session= await Stripe.Checkout.session.create({
+        line_items:[
+            {
+                name:req.user.name,
+                amount:totalprice,
+                currency:'egp',
+                quantity:1,
+            }],
+            mode:'payment',
+            success_url:`${req.protocol}://${req.get('host')}/orders`,
+            cancel_url:`${req.protocol}://${req.get('host')}/cart`
+    });
+
+    res.status(200).send({status:'success',session})
+})
+
+module.exports={createOrder,getOrderes,getOrderById,cancelOrder,checkoutSession}

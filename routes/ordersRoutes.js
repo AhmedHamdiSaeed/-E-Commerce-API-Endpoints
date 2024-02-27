@@ -1,16 +1,18 @@
 const express=require("express");
 const router=express.Router();
-const {createOrder,getOrderes,getOrderById,cancelOrder}=require("../Controllers/orderController");
+const {createOrder,getOrderes,getOrderById,cancelOrder,checkoutSession}=require("../Controllers/orderController");
 const { auth } = require("../middleware/auth");
 const { isAdmin } = require("../middleware/AdminUserAuth");
 
 
 //Get a list of orders (admin only)
 router.get("/",auth,isAdmin,getOrderes)
-//Get details of a specific order.
-router.get("/:id",auth,getOrderById)
 //create order
 router.post("/",auth,createOrder)
+//Get details of a specific order.
+router.get("/:id",auth,getOrderById)
 //  Cancel an existing order
 router.patch("/:id/cancel",auth,cancelOrder)
+//checkout session
+router.get("/checkout-session/:cartId",auth,checkoutSession)
 module.exports=router;
