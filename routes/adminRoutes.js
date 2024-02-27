@@ -7,16 +7,17 @@ const {
    
 } = require('../Controllers/productController');
 const { getCategory } = require('../Controllers/CategoryController');
-const getOreders = require('../Controllers/orderController');
+const {getOrderes} = require('../Controllers/orderController');
 const { getAllUsers } = require('../Controllers/userController');
 
-router.get('products', auth, isAdmin ,getProducts);
+router.get('/products', auth, isAdmin ,getProducts);
 
-router.get('orders', auth, isAdmin ,getCategory);
+router.get('/orders', auth, isAdmin ,getOrderes);
 
-router.get('categories', auth, isAdmin ,getOreders);
+// @ts-ignore
+router.get('categories', auth, isAdmin ,getCategory);
 
-router.get('users', auth, isAdmin ,getAllUsers);
+router.get('/users', auth, isAdmin ,getAllUsers);
 
 
 

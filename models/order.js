@@ -39,6 +39,10 @@ const orderSchema=mongoose.Schema({
             type:Boolean,
             default:false
         },
+        status:{
+            type:String,
+            default:"pending"
+        },
         shippingAddress:{
             details:String,
             phone:Number,
