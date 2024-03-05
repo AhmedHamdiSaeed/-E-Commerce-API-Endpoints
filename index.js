@@ -79,7 +79,7 @@ app.use("/api/v1/orders",ordersRoutes)
 
 
 ///////////emad
-app.use("/category",CategoryRoutes)
+app.use("/api/v1/category",CategoryRoutes)
 
 app.use("/api/v1/admin",auth,AdminRouter)
 
@@ -97,5 +97,6 @@ app.listen(process.env.PORT,()=>console.log("running"))
 
 //ouside rejection
 process.on("unhandledRejection",(err)=>{
+    // @ts-ignore
     console.log(`error: ${err.name} , message : ${err.message}`)
 })
