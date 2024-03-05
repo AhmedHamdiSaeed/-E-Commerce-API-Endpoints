@@ -5,7 +5,6 @@ const AsyncHandler = require("express-async-handler");
 const customError = require("../Utils/customError");
 const Product = require("../models/Product");
 const { getOrderByIdServise,getOrdersServise} = require("../services/orderServise");
-// @ts-ignore
 const Stripe= require("stripe")(process.env.Stripe_Secrete);
 
 const createOrder=AsyncHandler(async(req,res,next)=>{
@@ -67,6 +66,14 @@ const cancelOrder=AsyncHandler(async(req,res,next)=>{
     if(order.user.toString()===req.user.id)
     {
         order.status="Canceled";
+          //decrement Sold and increment quantity in Product
+    const Bulkoption=order.cartItems.map((item)=>({
+        updateOne:{
+            filter:{_id:item.product},update:{$inc:{quantity: +item.quantity,sold: -item.quantity}}
+        }
+    }));
+    Product.bulkWrite(Bulkoption,{})
+
         const updatedOrder=await order.save();
         res.status(200).json({status:"success",data:updatedOrder})
     }

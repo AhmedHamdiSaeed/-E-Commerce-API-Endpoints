@@ -9,5 +9,4 @@ const getOrderByIdServise=async(orderId)=>{
     return await Order.findById(orderId)
 }
 
-
 module.exports={getOrdersServise,getOrderByIdServise}
