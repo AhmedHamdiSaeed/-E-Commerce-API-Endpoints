@@ -12,11 +12,10 @@ const categorySchema= new mongoose.Schema({
         type:String,
         lowercase:true
     },
-    Products:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Products'
-    }] ,
-    image:String
+  
+    image:{
+        type: String
+    }
 },
 {timestamps:true}
 )
