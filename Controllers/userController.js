@@ -15,7 +15,7 @@ const register = async (req, res) => {
     if (!email || !password)
       return res
         .status(422)
-        .send({ message: "Please provide both email and password." });
+        .send({ message: "Please provide both email and password." , body: req.body });
 
     const user = await findUserService(email);
     if (user)
@@ -30,7 +30,7 @@ const register = async (req, res) => {
       lname,
       email,
       password: passwordHash,
-      role, 
+      // role, 
     });
     res.send(newUser);
   } catch (error) {
@@ -47,6 +47,7 @@ const login = async (req, res) => {
       return res
         .status(422)
         .send({ message: "Please provide both email and password." });
+        
 
     const user = await findUserService(email);
     if (!user)
@@ -57,10 +58,12 @@ const login = async (req, res) => {
     if (!isValidPassword)
       return res.status(401).send({ message: "Incorrect email or password." });
 
-    const token = jwt.sign({ email }, "myjwtsecret", { expiresIn: "1h" });
+    // @ts-ignore
+    const token = jwt.sign({ email },process.env.TOKEN_SECRET, { expiresIn: "1h" });
+
     res
-      .header("jwt", token)
-      .send({ token: token, message: "Access granted", user, email: email });
+      // .header("jwt", token)
+      .send({ token: token,expiresIn: "1" , message: "Access granted", user: user});
   } catch (error) {
     res
       .status(500)

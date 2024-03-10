@@ -5,6 +5,7 @@ const customError = require("./Utils/customError")
 const errorHandler=require("./middleware/errorMiddleware")
 
 
+const Cors = require('cors') ;
 //
 
 //routes
@@ -20,7 +21,10 @@ const { auth } = require("./middleware/auth")
 const { isAdmin } = require("./middleware/AdminUserAuth")
 
 const app=express();
+
 app.use(express.json())
+app.use(Cors()) ;
+// app.use('*' , Cors());
 
 app.use('/api/v1', userRoutes);
 app.use('/api/v1/products', productRoutes);
