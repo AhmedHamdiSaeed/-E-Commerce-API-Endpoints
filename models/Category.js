@@ -1,5 +1,6 @@
 const mongoose=require("mongoose")
-const categorySchema=mongoose.Schema({
+
+const categorySchema= new mongoose.Schema({
     name:{
         type:String,
         required:[true,"category required"],
@@ -11,7 +12,10 @@ const categorySchema=mongoose.Schema({
         type:String,
         lowercase:true
     },
-    image:String
+  
+    image:{
+        type: String
+    }
 },
 {timestamps:true}
 )

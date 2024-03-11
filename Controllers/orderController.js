@@ -1,3 +1,4 @@
+// @ts-nocheck
 const Order=require("../models/order")
 const Cart=require("../models/cart");
 const AsyncHandler = require("express-async-handler");
@@ -11,7 +12,7 @@ const stripe= require('stripe')('sk_test_51OoAdfHKyTd2gxdff0ItjSCSspETGmOHRAdVfd
 const createOrder=AsyncHandler(async(req,res,next)=>{
     const cartId=req.body.cartId;
     if(!cartId)
-        return next("cartId required",404);
+        return next("cartId required");
     //get cart by id
     const cart= await Cart.findById(req.body.cartId);
     if(!cart)
@@ -82,25 +83,5 @@ const cancelOrder=AsyncHandler(async(req,res,next)=>{
         return next(new customError("there is no such a order for this user"));
  
 })
-const createSession=AsyncHandler(async(req,res,next)=>{
-    
-    const session = await stripe.checkout.sessions.create({
-        line_items: [
-          {
-            price_data: {
-              currency: 'usd',
-              product_data: {
-                name: 'T-shirt',
-              },
-              unit_amount: 2000,
-            },
-            quantity: 1,
-          },
-        ],
-        mode: 'payment',
-        success_url: 'http://localhost:4242/success',
-        cancel_url: 'http://localhost:4242/cancel',
-      });
 
-})
 module.exports={createOrder,getOrderes,getOrderById,cancelOrder}

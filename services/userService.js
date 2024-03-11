@@ -8,10 +8,15 @@ const createUserService = async ({ fname, lname, email, passwordHash, role }) =>
 };
 
 const findUserService = async (email) => {
-  return await User.findOne({ email });
+  return await User.findOne({ email }).select('+password');
+};
+
+const getAllUserservices = async (email) => {
+  return await User.find();
 };
 
 module.exports = {
   createUserService,
   findUserService,
+  getAllUserservices
 };

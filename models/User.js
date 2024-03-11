@@ -6,7 +6,7 @@ const name = {
   type: String,
   required: true,
   minLength: 3,
-  maxLength: 10,
+  maxLength: 25,
 };
 const userSchema = new mongoose.Schema({
   fname: name,
@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minLength: 6,
+    select: false
   },
   role: {
     type: String,
