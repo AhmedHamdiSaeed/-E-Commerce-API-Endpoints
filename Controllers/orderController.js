@@ -4,6 +4,7 @@ const AsyncHandler = require("express-async-handler");
 const customError = require("../Utils/customError");
 const Product = require("../models/Product");
 const { getOrderByIdServise,getOrdersServise} = require("../services/orderServise");
+const { strip } = require("../validation/profile.validator");
 require("dotenv").config()
 const stripe= require('stripe')('sk_test_51OoAdfHKyTd2gxdff0ItjSCSspETGmOHRAdVfdWai1V9XgzUkfMoMeZDXPcqV6yFxq8GYeziBX5FLDXTYKgy30BZ00dh7Rbr7W');
 
@@ -81,5 +82,25 @@ const cancelOrder=AsyncHandler(async(req,res,next)=>{
         return next(new customError("there is no such a order for this user"));
  
 })
+const createSession=AsyncHandler(async(req,res,next)=>{
+    
+    const session = await stripe.checkout.sessions.create({
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: 'T-shirt',
+              },
+              unit_amount: 2000,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: 'http://localhost:4242/success',
+        cancel_url: 'http://localhost:4242/cancel',
+      });
 
+})
 module.exports={createOrder,getOrderes,getOrderById,cancelOrder}
