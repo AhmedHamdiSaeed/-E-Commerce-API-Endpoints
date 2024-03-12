@@ -1,6 +1,7 @@
 const express=require("express")
 require("dotenv").config()
 require("./db/connectionDB")
+const cors = require('cors')
 const customError = require("./Utils/customError")
 const errorHandler=require("./middleware/errorMiddleware")
 
@@ -21,9 +22,11 @@ const { isAdmin } = require("./middleware/AdminUserAuth")
 
 const app=express();
 app.use(express.json())
+app.use(cors());
 
 app.use('/api/v1', userRoutes);
 app.use('/api/v1/products', productRoutes);
+
 //cart route
 app.use('/api/v1/cart',cartRouter)
 
