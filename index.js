@@ -24,12 +24,8 @@ const { isAdmin } = require("./middleware/AdminUserAuth")
 const app=express();
 
 app.use(express.json())
-<<<<<<< HEAD
 app.use(cors());
-=======
-app.use(Cors()) ;
-// app.use('*' , Cors());
->>>>>>> c1afa21e28743b34a583a3c72a006674ff626110
+
 
 app.use('/api/v1', userRoutes);
 app.use('/api/v1/products', productRoutes);
