@@ -9,6 +9,15 @@ const getProductByIdService = async (productId) => {
   return await Product.findById(productId);
 };
 
+const getProductByCategory = async (categoryId) => {
+  let query = {};
+  if (categoryId) {
+    query = { category: categoryId };
+  }
+  return await Product.find(query);
+};
+
+
 const createProductService = async (productData, userId) => {
   const product = new Product({ ...productData, user: userId });
   return await product.save();
@@ -27,5 +36,6 @@ module.exports = {
     getProductByIdService,
     createProductService,
     updateProductService,
-    deleteProductService
+    deleteProductService,
+    getProductByCategory
   };

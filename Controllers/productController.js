@@ -1,4 +1,4 @@
-const { getProductsService, getProductByIdService, createProductService, updateProductService, deleteProductService } = require('../services/productService');
+const { getProductsService, getProductByIdService, createProductService, updateProductService, deleteProductService , getProductByCategory } = require('../services/productService');
 const CustomError = require('../Utils/customError');
 
 const getProducts = async (req, res) => {
@@ -21,6 +21,17 @@ const getProductById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const getProductsByCategory = async (req, res) => {
+  try {
+    const categoryId = req.params.categoryId; // Assuming category id is passed in the request parameters
+    const products = await getProductByCategory(categoryId);
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 const createProduct = async (req, res) => {
   try {
@@ -75,5 +86,6 @@ module.exports = {
   getProductById,
   updateProduct,
   createProduct,
-  deleteProduct
+  deleteProduct,
+  getProductsByCategory
 };
