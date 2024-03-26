@@ -15,7 +15,7 @@ router.get('/products', auth, isAdmin ,getProducts);
 router.get('/orders', auth, isAdmin ,getOrderes);
 
 // @ts-ignore
-router.get('categories', auth, isAdmin ,getCategory);
+router.get('/categories', auth, isAdmin ,getCategory);
 
 router.get('/users', auth, isAdmin ,getAllUsers);
 
