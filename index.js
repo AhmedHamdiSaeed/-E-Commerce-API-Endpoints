@@ -27,6 +27,7 @@ app.use(cors());
  
 app.use("/api/v1", userRoutes);
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/userProfile",profileRoutes)
 //cart route
 app.use("/api/v1/cart", cartRouter);
  
