@@ -30,7 +30,7 @@ const register = async (req, res) => {
       lname,
       email,
       password: passwordHash,
-      // role, 
+      role, 
     });
     res.send(newUser);
   } catch (error) {
