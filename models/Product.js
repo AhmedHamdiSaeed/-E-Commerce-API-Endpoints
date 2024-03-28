@@ -33,12 +33,12 @@ const productSchema = new mongoose.Schema
         type: [String],
         default: ['#fffff'],
       },
-      category: {
+    category: {
         type: mongoose.Schema.ObjectId,
         ref:"Category",
         required: [true, 'Pleaze provide product "category" '],
       },
-      company: {
+    company: {
         type: String,
         required: [true, 'Pleaze provide "company"'],
     },
