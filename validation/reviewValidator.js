@@ -5,10 +5,9 @@ const validatMidelware = require("../middleware/validatorMidelware")
 
 const createReviewValidator=[
     check('description').isString().optional(),
-    check('ratting').notEmpty().withMessage("ratting required").isNumeric({max:5,min:1}).withMessage('must between 1 and 5'),
+    check('ratting').notEmpty().withMessage("ratting required").isFloat({max:5,min:1}).withMessage('Ratting must between 1 and 5'),
     check('user').isMongoId().withMessage('invalid userID').notEmpty().withMessage("user required")
     .custom((val,{req})=>{
-        console.log("before if",req.user._id.toString())
         if(req.user._id.toString()!==req.body.user.toString())
         {
             throw new Error('you must insert review with your userID only')
@@ -19,7 +18,6 @@ const createReviewValidator=[
     check('product').isMongoId().withMessage('invalid productID').notEmpty().withMessage("product required")
     .custom(async(val,{req})=>{
         const Review=await review.findOne({user:req.user._id,product:req.body.product})
-            console.log("inside validatorreview",Review)
             if(Review)
             {
                throw new Error('you created review before')

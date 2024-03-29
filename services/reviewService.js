@@ -1,3 +1,4 @@
+const review = require('../models/review');
 const Review = require('../models/review');
 
 const setProductIdandUserIdInBody=(req,res,next)=>{
@@ -31,6 +32,7 @@ const createReviewService=async(newReview)=>{
 
 const updateReviewService=async(id,updatedData)=>{
    const updatedReview= await Review.findByIdAndUpdate(id,updatedData,{new:true})
+   console.log("updatedReview: ",updatedReview)
     updatedReview.save();
 }
 const getReviewByIdService=async(id,req)=>{
@@ -42,8 +44,7 @@ const getReviewByIdService=async(id,req)=>{
     }
     return await Review.findOne(filter)
 }
-    const deleteReviewService=async(id)=>{
-    const reviewDeleted=await Review.findByIdAndDelete(id);
-    reviewDeleted.remove();
+const deleteReviewService=async(id)=>{
+    await Review.findByIdAndDelete(id);
 }
 module.exports={getReviewsService,createReviewService,updateReviewService,getReviewByIdService,deleteReviewService,createfilterObject,setProductIdandUserIdInBody};
