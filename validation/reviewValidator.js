@@ -71,7 +71,7 @@ const deleteReviewByIdValidator=[
         }
         if(req.user.role==='user')
         {
-            if(req.user._id.toString()!==Review.user.toString())
+            if(req.user._id.toString()!==Review.user._id.toString())
             {
                 throw new Error(`you are not allowed to delete this review`)
             }

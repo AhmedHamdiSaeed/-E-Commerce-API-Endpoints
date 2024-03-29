@@ -30,7 +30,8 @@ const createReviewService=async(newReview)=>{
 }
 
 const updateReviewService=async(id,updatedData)=>{
-    await Review.findByIdAndUpdate(id,updatedData,{new:true})
+   const updatedReview= await Review.findByIdAndUpdate(id,updatedData,{new:true})
+    updatedReview.save();
 }
 const getReviewByIdService=async(id,req)=>{
     filter={id};
@@ -42,6 +43,7 @@ const getReviewByIdService=async(id,req)=>{
     return await Review.findOne(filter)
 }
     const deleteReviewService=async(id)=>{
-    await Review.findByIdAndDelete(id);
+    const reviewDeleted=await Review.findByIdAndDelete(id);
+    reviewDeleted.remove();
 }
 module.exports={getReviewsService,createReviewService,updateReviewService,getReviewByIdService,deleteReviewService,createfilterObject,setProductIdandUserIdInBody};
