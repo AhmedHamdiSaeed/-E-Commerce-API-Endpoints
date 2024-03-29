@@ -3,7 +3,7 @@ const asyncHander = require('express-async-handler');
 const Cart = require('../models/cart');
 const Product = require('../models/Product')
 const User = require('../models/User')
-const ApiError = require('../Utils/customError');
+const ApiError = require('../Utils/CustomError');
 const {newCartVaildatin}=require('../validation/cart.validator');
 
 
@@ -14,57 +14,68 @@ const getCart= asyncHander(async(req,res)=>{
     res.send(carts);
 });
 
-const createNewCart =asyncHander( async (req, res,next) => {
-        const { productId,quantity } = req.body;
-        const { email } = req.user;
-        // Validate the request body
-        const { error } = newCartVaildatin(req.body);
+
+const createNewCart = asyncHander(async (req, res, next) => {
+    const products = req.body; 
+    const { email } = req.user;
+
+    // Validate each product in the request body
+    for (const product of products) {
+        const { error } = newCartVaildatin(product);
         if (error) {
             return res.status(400).send({ message: error.details[0].message });
         }
-       
-        // Find the product by its ID
-        const product = await Product.findById(productId);
-        console.log(`product ${product}`);
-        if (!product) {
-           
-            return res.status(404).send({ message: 'Product not found' });
-        }
+    }
 
-        // Find the user's cart or create a new one
-        
+    try {
         const user = await User.findOne({ email });
         if (!user) {
-        return res.status(404).send({ message: 'User not found' });
+            return res.status(404).send({ message: 'User not found' });
         }
-        console.log(`req.user ${user._id }`);
-        let cart = await Cart.findOne({ user:user._id });
+
+        let cart = await Cart.findOne({ user: user._id });
         if (!cart) {
-            cart = await Cart.create({
-                user: user._id ,
-                cartItems: [{product: product._id, titel: product.title , price: product.price,quantity:quantity  }]
-            });
-        } else {
-            //find index of product in cart
-            const productIndex  = cart.cartItems.findIndex(item =>
-                 item.product.toString() === productId)
-              console.log(productIndex )
-              if(productIndex>-1){
-                cart.cartItems[productIndex].quantity +=quantity;
-              }else{
-                cart.cartItems.push({product: product._id, titel: product.title , price: product.price ,quantity});
-              }
-            // calculate total price of product
-            let totalPrice=0;
-            cart.cartItems.forEach(element => {
-                totalPrice += element.quantity * element.price 
-            });
-            cart.totalprice=totalPrice;
-            await cart.save();
+            cart = await Cart.create({ user: user._id, cartItems: [] });
+        }
+
+        for (const product of products) {
+            const { productId, quantity } = product;
+            const existingItem = cart.cartItems.find(item => item.product.toString() === productId);
+            const productInfo = await Product.findById(productId);
+
+            if (!productInfo) {
+                return res.status(404).send({ message: `Product with ID ${productId} not found` });
             }
 
-        res.send({ numOfCartItems: cart.cartItems.length, data:cart});
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.cartItems.push({
+                    product: productInfo._id,
+                    title: productInfo.title,
+                    price: productInfo.price,
+                    quantity: quantity
+                });
+            }
+        }
+
+        let totalPrice = 0;
+        cart.cartItems.forEach(item => {
+            totalPrice += item.quantity * item.price;
+        });
+        cart.totalprice = totalPrice;
+
+        await cart.save();
+
+        res.send({ numOfCartItems: cart.cartItems.length, data: cart });
+    } catch (error) {
+        return next(new ApiError('Internal Server Error', 500));
+    }
 });
+
+
+
+
 
 const updateCart=asyncHander(async(req,res,next)=>{
    

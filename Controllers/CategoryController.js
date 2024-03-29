@@ -1,6 +1,6 @@
 const {getCategoryService, getCategoryByIdService} = require("../services/categoryService");
 
-const CustomError = require('../Utils/customError');
+const CustomError = require('../Utils/CustomError');
 
 
 

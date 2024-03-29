@@ -33,12 +33,12 @@ const productSchema = new mongoose.Schema
         type: [String],
         default: ['#fffff'],
       },
-      category: {
+    category: {
         type: mongoose.Schema.ObjectId,
         ref:"Category",
         required: [true, 'Pleaze provide product "category" '],
       },
-      company: {
+    company: {
         type: String,
         required: [true, 'Pleaze provide "company"'],
     },
@@ -48,14 +48,29 @@ const productSchema = new mongoose.Schema
     sold:{
         type:Number,
         default:0
+    },
+    rattingsQuantity:{
+        type:Number,
+        default:0
+    },
+    rattingsAverage:{
+        type:Number,
+        default:0
     }
     ,
         user: {
             type: mongoose.Types.ObjectId,
             ref: 'User',
           }
-} );
+},{timestamps:true,toJSON:{ virtuals: true },
+toObject: { virtuals: true } },);
 
+
+productSchema.virtual('reviews',{
+    ref:"Review",
+    foreignField:"product",
+    localField:"_id"
+})
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;
