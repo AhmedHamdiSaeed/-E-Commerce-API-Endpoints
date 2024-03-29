@@ -19,12 +19,19 @@ const CategoryRoutes = require("./routes/categoryRoutes");
 const AdminRouter = require("./routes/adminRoutes");
 const reviewRoutes=require('./routes/reviewRoutes');
 const { auth } = require("./middleware/auth");
+const { isAdmin } = require("./middleware/AdminUserAuth");
+const path = require("path");
  
 const app = express();
  
 app.use(express.json());
 app.use(cors());
- 
+
+app.use('/api/v1/uploads' , express.static(path.join(__dirname , '/uploads'))) ;
+
+
+
+
 app.use("/api/v1", userRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/userProfile",profileRoutes)
@@ -62,3 +69,5 @@ process.on("unhandledRejection", (err) => {
   // @ts-ignore
   console.log(`error: ${err.name} , message : ${err.message}`);
 });
+
+
