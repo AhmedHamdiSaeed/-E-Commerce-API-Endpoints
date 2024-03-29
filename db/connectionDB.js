@@ -9,3 +9,4 @@ const path = "mongodb+srv://user1:1111@e-commercedb.ibnxepr.mongodb.net/e-commer
 
 mongoose.connect(path).then(()=>console.log("connect ")).catch(()=>console.log("no connect"))
 
+

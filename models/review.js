@@ -49,6 +49,8 @@ reviewSchema.statics.updateQuantityAndAvgRattings=async function(productId){
 }
 reviewSchema.post('save',async function(){
      await this.constructor.updateQuantityAndAvgRattings(this.product);
-    
+})
+reviewSchema.post('remove',async function(){
+    await this.constructor.updateQuantityAndAvgRattings(this.product);  
 })
 module.exports=mongoose.model('Review',reviewSchema);
