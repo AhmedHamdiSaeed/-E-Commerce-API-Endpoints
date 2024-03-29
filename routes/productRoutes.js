@@ -2,6 +2,7 @@ const express = require('express');
 const { isAdmin, isUser } = require('../middleware/AdminUserAuth');
 const { auth } = require("../middleware/auth");
 const router = express.Router();
+const reviewRoutes=require('../routes/reviewRoutes')
 const {
     getProducts,
     getProductById,
@@ -10,7 +11,7 @@ const {
     deleteProduct,
     getProductsByCategory
 } = require('../Controllers/productController');
-
+router.use('/:productId/reviews',reviewRoutes)
 router.get('/',getProducts);
 router.get('/:id',getProductById);
 router.post('/', auth, isAdmin, createProduct);

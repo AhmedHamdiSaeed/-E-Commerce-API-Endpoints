@@ -2,10 +2,10 @@ const express = require("express");
 require("dotenv").config();
 require("./db/connectionDB");
 const cors = require("cors");
-const customError = require("./Utils/customError");
+const Cors = require("cors");
+const CustomError = require("./Utils/CustomError");
 const errorHandler = require("./middleware/errorMiddleware");
  
-const Cors = require("cors");
 //
  
 //routes
@@ -17,8 +17,8 @@ const productRoutes = require("./routes/productRoutes");
 const ordersRoutes = require("./routes/ordersRoutes");
 const CategoryRoutes = require("./routes/categoryRoutes");
 const AdminRouter = require("./routes/adminRoutes");
+const reviewRoutes=require('./routes/reviewRoutes');
 const { auth } = require("./middleware/auth");
-const { isAdmin } = require("./middleware/AdminUserAuth");
  
 const app = express();
  
@@ -44,14 +44,14 @@ app.use("/api/v1/search", searchRoute);
 ////////// ahmed
  
 app.use("/api/v1/orders", ordersRoutes);
- 
+app.use("/api/v1/review",reviewRoutes)
 ///////////emad
 app.use("/api/v1/category", CategoryRoutes);
  
 app.use("/api/v1/admin", auth, AdminRouter);
  
 app.all("*", (req, res, next) => {
-  next(new customError("can't found this route", 500));
+  next(new CustomError("can't found this route", 500));
 });
 app.use(errorHandler);
  

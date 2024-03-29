@@ -1,5 +1,5 @@
 const { getProductsService, getProductByIdService, createProductService, updateProductService, deleteProductService , getProductByCategory } = require('../services/productService');
-const CustomError = require('../Utils/customError');
+const CustomError = require('../Utils/CustomError');
 
 const getProducts = async (req, res) => {
   try {
@@ -12,7 +12,7 @@ const getProducts = async (req, res) => {
 
 const getProductById = async (req, res) => {
   try {
-    const product = await getProductByIdService(req.params.id);
+    const product = await getProductByIdService(req.params.id,'reviews');
     if (!product) {
       throw new CustomError(`No product with id: ${req.params.id}`);
     }
