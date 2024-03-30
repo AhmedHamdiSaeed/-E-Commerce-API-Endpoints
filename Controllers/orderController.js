@@ -2,9 +2,9 @@
 const Order=require("../models/order")
 const Cart=require("../models/cart");
 const AsyncHandler = require("express-async-handler");
-const customError = require("../Utils/customError");
+const customError = require("../Utils/CustomError");
 const Product = require("../models/Product");
-const { getOrderByIdServise,getOrdersServise} = require("../services/orderServise");
+const { getOrderByIdServise,getOrdersServise} = require("../services/orderService");
 const { strip } = require("../validation/profile.validator");
 require("dotenv").config()
 const stripe= require('stripe')('sk_test_51OoAdfHKyTd2gxdff0ItjSCSspETGmOHRAdVfdWai1V9XgzUkfMoMeZDXPcqV6yFxq8GYeziBX5FLDXTYKgy30BZ00dh7Rbr7W');
@@ -43,7 +43,8 @@ const createOrder=AsyncHandler(async(req,res,next)=>{
 })
 
 const getOrderes=AsyncHandler(async(req,res,next)=>{
-    const orders= await getOrdersServise();
+    console.log("inside orderController : ",req.filterObj)
+    const orders= await getOrdersServise(req.filterObj);
     res.send(orders);
 });
 

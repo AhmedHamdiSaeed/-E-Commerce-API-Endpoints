@@ -5,8 +5,13 @@ const getProductsService = async () => {
   return await Product.find();
 };
 
-const getProductByIdService = async (productId) => {
-  return await Product.findById(productId);
+const getProductByIdService = async (productId,populateopt) => {
+  let query=Product.findById(productId);
+  if(populateopt)
+  {
+    query=query.populate(populateopt)
+  }
+  return await query
 };
 
 const getProductByCategory = async (categoryId) => {

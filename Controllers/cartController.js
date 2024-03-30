@@ -3,7 +3,7 @@ const asyncHander = require('express-async-handler');
 const Cart = require('../models/cart');
 const Product = require('../models/Product')
 const User = require('../models/User')
-const ApiError = require('../Utils/customError');
+const ApiError = require('../Utils/CustomError');
 const {newCartVaildatin}=require('../validation/cart.validator');
 
 

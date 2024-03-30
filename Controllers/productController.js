@@ -1,5 +1,8 @@
 const { getProductsService, getProductByIdService, createProductService, updateProductService, deleteProductService , getProductByCategory } = require('../services/productService');
-const CustomError = require('../Utils/customError');
+const CustomError = require('../Utils/CustomError');
+const upload = require('./multerConfig') ;
+
+
 
 const getProducts = async (req, res) => {
   try {
@@ -12,10 +15,11 @@ const getProducts = async (req, res) => {
 
 const getProductById = async (req, res) => {
   try {
-    const product = await getProductByIdService(req.params.id);
+    const product = await getProductByIdService(req.params.id,'reviews');
     if (!product) {
       throw new CustomError(`No product with id: ${req.params.id}`);
     }
+
     res.json(product);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -40,12 +44,50 @@ const createProduct = async (req, res) => {
       throw new CustomError('Only admins can create products', 403);
     }
 
-    const product = await createProductService(req.body);
-    res.status(201).json(product);
-  } catch (error) {
-    res.status(error.statusCode || 400).json({ error: error.message });
+    upload(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ error: err });
+      } else {
+        try {
+          // Extracting product details from request body
+          const { title, quantity, price, description, colors, category, company  , sold} = req.body;
+  
+          // Check if file is uploaded
+          if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+          }
+  
+          // Save the uploaded image to the server
+          const imagePath = req.file.path;
+  
+          // Create a new product with image path
+          const newProduct = {
+            title,
+            quantity,
+            price,
+            description,
+            image: imagePath, // Save the path to the image
+            colors,
+            category,
+            company,
+            sold
+          };
+  
+          const product = await createProductService(newProduct);
+          res.status(201).json(product);
+          
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Internal server error' });
+        }
+      }
+    });
   }
-};
+
+   catch (error) {
+    console.log(error)
+    res.status(error.statusCode || 400).json({ error: error.message });
+   }}
 
 const updateProduct = async (req, res) => {
   try {
