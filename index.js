@@ -17,7 +17,11 @@ const productRoutes = require("./routes/productRoutes");
 const ordersRoutes = require("./routes/ordersRoutes");
 const CategoryRoutes = require("./routes/categoryRoutes");
 const AdminRouter = require("./routes/adminRoutes");
+
+const emailRoutes = require("./routes/contactRoutes");
+
 const reviewRoutes=require('./routes/reviewRoutes');
+
 const { auth } = require("./middleware/auth");
 const { isAdmin } = require("./middleware/AdminUserAuth");
 const path = require("path");
@@ -40,6 +44,7 @@ app.use("/api/v1/cart", cartRouter);
  
 app.use("/api/v1/search", searchRoute);
  
+ app.use('/', emailRoutes);
 ////////////////// amal
  
 /////////             heba
@@ -47,7 +52,7 @@ app.use("/api/v1/search", searchRoute);
 ////////////////// aml
  
 ////////////////   radwa
- 
+
 ////////// ahmed
  
 app.use("/api/v1/orders", ordersRoutes);
