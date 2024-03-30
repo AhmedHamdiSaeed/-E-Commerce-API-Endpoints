@@ -1,5 +1,5 @@
 const mongoose=require("mongoose")
-const orderSchema=mongoose.Schema({
+const orderSchema=new mongoose.Schema({
     user:{
         type:mongoose.Schema.ObjectId,
         ref:"User",
@@ -16,16 +16,16 @@ const orderSchema=mongoose.Schema({
                 price:Number
             },
         ],
-        taxPrice:{
+    taxPrice:{
             type:Number,
             default:0
         },
-        shippingPrice:{
+    shippingPrice:{
             type:Number,
             default:0
         },
         totalOrderPrice:Number,
-        paymentMethod:{
+    paymentMethod:{
             type:String,
             enum:['cash','card'],
             default:'cash'

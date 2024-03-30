@@ -8,7 +8,7 @@ const {
 } = require('../Controllers/productController');
 const { getCategory } = require('../Controllers/CategoryController');
 const {getOrderes} = require('../Controllers/orderController');
-const { getAllUsers } = require('../Controllers/userController');
+const { getAllUsers , deleteUser } = require('../Controllers/userController');
 
 router.get('/products', auth, isAdmin ,getProducts);
 
@@ -18,6 +18,8 @@ router.get('/orders', auth, isAdmin ,getOrderes);
 router.get('/categories', auth, isAdmin ,getCategory);
 
 router.get('/users', auth, isAdmin ,getAllUsers);
+
+router.delete('/users/:userId', auth, isAdmin ,deleteUser);
 
 
 
