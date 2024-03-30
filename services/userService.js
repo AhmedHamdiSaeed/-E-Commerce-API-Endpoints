@@ -12,11 +12,16 @@ const findUserService = async (email) => {
 };
 
 const getAllUserservices = async (email) => {
-  return await User.find();
+  return await User.find({'role': {$ne:'admin'}}) ;
 };
 
+
+const deleteUSerServices = async (userId)=>{
+    return await User.findByIdAndDelete(userId) ;
+}
 module.exports = {
   createUserService,
   findUserService,
-  getAllUserservices
+  getAllUserservices,
+  deleteUSerServices 
 };

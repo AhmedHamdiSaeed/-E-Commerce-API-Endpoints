@@ -27,7 +27,7 @@ const productSchema = new mongoose.Schema
     image :
     {
         type:String,
-        default : '/images/1.jpg'
+        default : 'uploads/1.jpg'
     },
     colors: {
         type: [String],
