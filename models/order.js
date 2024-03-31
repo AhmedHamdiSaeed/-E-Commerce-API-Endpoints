@@ -49,7 +49,7 @@ const orderSchema=new mongoose.Schema({
             city:String
 
         },
-        delivred:Date}
+        delivredAt:Date}
         ,{timestamps:true}
 )
 const Order=mongoose.model('Order',orderSchema)

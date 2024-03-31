@@ -9,7 +9,7 @@ const { strip } = require("../validation/profile.validator");
 require("dotenv").config()
 const stripe= require('stripe')('sk_test_51OoAdfHKyTd2gxdff0ItjSCSspETGmOHRAdVfdWai1V9XgzUkfMoMeZDXPcqV6yFxq8GYeziBX5FLDXTYKgy30BZ00dh7Rbr7W');
 
-const createOrder=AsyncHandler(async(req,res,next)=>{
+const createCashOrder=AsyncHandler(async(req,res,next)=>{
     const cartId=req.body.cartId;
     if(!cartId)
         return next("cartId required");
@@ -81,8 +81,40 @@ const cancelOrder=AsyncHandler(async(req,res,next)=>{
         res.status(200).json({status:"success",data:updatedOrder})
     }
     else
-        return next(new customError("there is no such a order for this user"));
+        return next(new customError("there is no such an order for this user"));
  
 })
 
-module.exports={createOrder,getOrderes,getOrderById,cancelOrder}
+const updatePayStatus=AsyncHandler(
+    async(req,res,next)=>{
+        const order=await getOrderByIdServise(req.params.id);
+        if(!order)
+         return next(new customError("there is no such an order for this OrderID"));
+        order.isPaid=true;
+        order.paidAt=Date.now();
+       const updatedOrder= await order.save();
+        res.status(201).json({
+            success: true,
+            message: 'order updated successfully',
+            data: updatedOrder 
+          });    
+        }
+)
+
+const updateDelivredStatus=AsyncHandler(
+    async(req,res,next)=>{
+        const order=await getOrderByIdServise(req.params.id);
+        if(!order)
+         return next(new customError("there is no such an order for this OrderID"));
+        order.isDelivred=true;
+        order.delivredAt=Date.now();
+       const updatedOrder= await order.save();
+        res.status(201).json({
+            success: true,
+            message: 'order updated successfully',
+            data: updatedOrder 
+          });    
+        }
+)
+
+module.exports={createCashOrder,getOrderes,getOrderById,cancelOrder,updatePayStatus,updateDelivredStatus}
