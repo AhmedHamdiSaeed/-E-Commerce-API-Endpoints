@@ -14,7 +14,8 @@ const categorySchema= new mongoose.Schema({
     },
   
     image:{
-        type: String
+        type: String,
+        default: 'uploads/category.jpg'
     }
 },
 {timestamps:true}

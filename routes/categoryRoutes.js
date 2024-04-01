@@ -2,7 +2,7 @@ const express=require("express")
 const expressAsyncHandler = require("express-async-handler")
 const router=express.Router()
 const Category=require("../models/Category");
-const {getCategory} = require("../Controllers/CategoryController") ;
+const {getCategory , CreateCategory} = require("../Controllers/CategoryController") ;
 
 // router.route("/").get(expressAsyncHandler(async(req,res,next)=>{
 //     const categories= await getCategory();
@@ -10,5 +10,6 @@ const {getCategory} = require("../Controllers/CategoryController") ;
 // }))
 
 router.get('/' , getCategory) ;
+router.post('/' , CreateCategory) ;
 
 module.exports=router;

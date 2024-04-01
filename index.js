@@ -4,7 +4,7 @@ require("./db/index");
 const cors = require("cors");
 const CustomError = require("./Utils/CustomError");
 const errorHandler = require("./middleware/errorMiddleware");
- 
+ const compression=require('compression')
 //
  
 //routes
@@ -29,7 +29,7 @@ const app = express();
  
 app.use(express.json());
 app.use(cors());
-
+app.use(compression())
 app.use('/api/v1/images' , express.static(path.join(__dirname , '/uploads'))) ;
 
 

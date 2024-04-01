@@ -10,5 +10,7 @@ const getCategoryService = async () => {
     return await Category.findById(CategoryId).populate('Products');
   };
 
-
-  module.exports = {getCategoryService, getCategoryByIdService} ;
+const CreateCategoryService = async (categoryData)=>{
+  return await Category.create(categoryData) ;
+}
+  module.exports = {getCategoryService, getCategoryByIdService , CreateCategoryService} ;
