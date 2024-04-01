@@ -1,8 +1,7 @@
 const express = require("express");
 require("dotenv").config();
-require("./db/connectionDB");
+require("./db/index");
 const cors = require("cors");
-const Cors = require("cors");
 const CustomError = require("./Utils/CustomError");
 const errorHandler = require("./middleware/errorMiddleware");
  
@@ -17,7 +16,11 @@ const productRoutes = require("./routes/productRoutes");
 const ordersRoutes = require("./routes/ordersRoutes");
 const CategoryRoutes = require("./routes/categoryRoutes");
 const AdminRouter = require("./routes/adminRoutes");
+
+const emailRoutes = require("./routes/contactRoutes");
+
 const reviewRoutes=require('./routes/reviewRoutes');
+
 const { auth } = require("./middleware/auth");
 const { isAdmin } = require("./middleware/AdminUserAuth");
 const path = require("path");
@@ -27,7 +30,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/v1/uploads' , express.static(path.join(__dirname , '/uploads'))) ;
+app.use('/api/v1/images' , express.static(path.join(__dirname , '/uploads'))) ;
 
 
 
@@ -40,6 +43,16 @@ app.use("/api/v1/cart", cartRouter);
  
 app.use("/api/v1/search", searchRoute);
  
+ app.use('/', emailRoutes);
+////////////////// amal
+ 
+/////////             heba
+ 
+////////////////// aml
+ 
+////////////////   radwa
+
+////////// ahmed
  
 app.use("/api/v1/orders", ordersRoutes);
 app.use("/api/v1/review",reviewRoutes)

@@ -43,7 +43,8 @@ const createOrder=AsyncHandler(async(req,res,next)=>{
 })
 
 const getOrderes=AsyncHandler(async(req,res,next)=>{
-    const orders= await getOrdersServise();
+    console.log("inside orderController : ",req.filterObj)
+    const orders= await getOrdersServise(req.filterObj);
     res.send(orders);
 });
 

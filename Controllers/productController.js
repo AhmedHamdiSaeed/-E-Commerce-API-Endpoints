@@ -1,41 +1,8 @@
 const { getProductsService, getProductByIdService, createProductService, updateProductService, deleteProductService , getProductByCategory } = require('../services/productService');
 const CustomError = require('../Utils/CustomError');
-
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const upload = require('./multerConfig') ;
 
 
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 5000000 }, // Limiting file size to 5MB
-  fileFilter: function (req, file, cb) {
-    checkFileType(file, cb);
-  }
-}).single('image'); // 'image' should match the name attribute in your form field for image upload
-
-
-function checkFileType(file, cb) {
-  const filetypes = /jpeg|jpg|png|gif/;
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = filetypes.test(file.mimetype);
-
-  if (extname && mimetype) {
-    return cb(null, true);
-  } else {
-    cb('Error: Images only!');
-  }
-}
 
 const getProducts = async (req, res) => {
   try {
@@ -53,21 +20,6 @@ const getProductById = async (req, res) => {
       throw new CustomError(`No product with id: ${req.params.id}`);
     }
 
-  //  const imagePath =  product.image ;
-  //  const imageFolder = 'uploads/'
-  // const imageFile = path.join(imageFolder,imagePath)
-
-  // fs.readFile(imageFile, (err , ImageData)=>{
-  //   if(err){
-  //     res.status(500).send('failed to read image file ');
-  //     return ;
-  //   }
-  // })
-
-  // const responsePackage = {
-  //   product: product ,
-  //   image: imageFile
-  // }
     res.json(product);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -156,7 +108,6 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   try {
-    // Check if the user is an admin
     if (req.user.role !== 'admin') {
       throw new CustomError('Only admins can delete products', 403);
     }

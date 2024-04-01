@@ -1,10 +1,13 @@
 const {
-  findUserService, getAllUserservices
+  findUserService, getAllUserservices , deleteUSerServices
 } = require("../services/userService");
 const profileValidator=require("../validation/profile.validator")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const AsyncHandler = require("express-async-handler");
+const CustomError = require("../Utils/CustomError");
+
 
 const register = async (req, res) => {
   try {
@@ -85,8 +88,24 @@ const getAllUsers = async (req , res , next)=>{
 
 }
 
+const deleteUser = AsyncHandler( async (req , res , next)=>{
+
+  // @ts-ignore
+  if (req.user.role !== 'admin') {
+    throw new CustomError('Only admins can delete products', 403);
+  }
+
+  const user = await deleteUSerServices(req.params.userId)
+  if (!user) {
+    throw new CustomError(`No product with id: ${req.params.userId}`, 404);
+  }
+  res.json({ message: 'Product deleted successfully' });
+  
+})
+
 module.exports = {
   register,
   login,
-  getAllUsers
+  getAllUsers,
+  deleteUser
 };

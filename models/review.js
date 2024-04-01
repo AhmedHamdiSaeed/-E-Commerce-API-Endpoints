@@ -33,6 +33,7 @@ reviewSchema.pre(/^find/,function(next){
 })
 
 reviewSchema.statics.updateQuantityAndAvgRattings=async function(productId){
+    console.log("inside static function",productId )
     const result =await this.aggregate([
         {
             $match:{product:productId}
@@ -44,11 +45,18 @@ reviewSchema.statics.updateQuantityAndAvgRattings=async function(productId){
             }
         }
     ])
+    if(result.length>0)
     await Product.findByIdAndUpdate(productId,{rattingsQuantity:result[0].rattingsQuantity,rattingsAverage:result[0].rattingsAvg});
-    console.log(result[0].rattingsQuantity,result[0].rattingsAvg)
-}
+    else
+    await Product.findByIdAndUpdate(productId,{rattingsQuantity:0,rattingsAverage:0});
+};
 reviewSchema.post('save',async function(){
      await this.constructor.updateQuantityAndAvgRattings(this.product);
-    
-})
-module.exports=mongoose.model('Review',reviewSchema);
+});
+
+reviewSchema.post('findOneAndDelete',async function(review){
+     await review.constructor.updateQuantityAndAvgRattings(review.product) 
+});
+
+const Review=mongoose.model('Review',reviewSchema);
+module.exports=Review;
