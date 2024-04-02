@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const getCurrentUser= async (req, res) => {
     try {
         console.log("userID",req.user._id)
-        const user = await userService.findUserService(req.user._id);
+         const user = await userService.findUserServiceProfile(req.user._id);
         if (!user) res.status(400).send("user not found");
         res.send(user);
     } catch (error) {
