@@ -13,4 +13,5 @@ const getCategoryService = async () => {
 const CreateCategoryService = async (categoryData)=>{
   return await Category.create(categoryData) ;
 }
+
   module.exports = {getCategoryService, getCategoryByIdService , CreateCategoryService} ;
