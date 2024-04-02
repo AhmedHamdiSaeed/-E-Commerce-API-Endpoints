@@ -5,27 +5,31 @@ const AsyncHandler = require("express-async-handler");
 const customError = require("../Utils/CustomError");
 const Product = require("../models/Product");
 const { getOrderByIdServise,getOrdersServise} = require("../services/orderService");
-const { strip } = require("../validation/profile.validator");
+const Payment = require("../models/payment");
+const payment = require("../models/payment");
+const User = require("../models/User");
 require("dotenv").config()
 const stripe= require('stripe')('sk_test_51OoAdfHKyTd2gxdff0ItjSCSspETGmOHRAdVfdWai1V9XgzUkfMoMeZDXPcqV6yFxq8GYeziBX5FLDXTYKgy30BZ00dh7Rbr7W');
 
 const createOrder=AsyncHandler(async(req,res,next)=>{
-    const cartId=req.body.cartId;
+    const cartId=req.params.cartID;
     if(!cartId)
         return next("cartId required");
     //get cart by id
-    const cart= await Cart.findById(req.body.cartId);
+    const cart= await Cart.findById(req.params.cartID).populate('user').exec();;
     if(!cart)
         return next(new customError("can't found this cart",204));
     const taxPrice=0;
     const shippingPrice=0;
     const totalOrderPrice=cart.totalprice + taxPrice+shippingPrice;
     //create order
+    console.log("inside createorder user :",cart.user.address)
+    
     const order=await Order.create({
-        user:req.user._id,
+        user:cart.user,
         cartItems:cart.cartItems,
         totalOrderPrice,
-        shippingAddress:req.body.shippingAddress
+        shippingAddress:cart.user.address //// set shipping address in user
     })
 
     //increment Sold and decrement quantity in Product
@@ -37,13 +41,19 @@ const createOrder=AsyncHandler(async(req,res,next)=>{
     Product.bulkWrite(Bulkoption,{})
 
     //clear cart 
-    await Cart.findByIdAndDelete(req.body.cartId)
+    await Cart.findByIdAndDelete(req.params.cartID)
 
-    res.status(201).json({success:'success',data:order})
+    const payment=await Payment.create({
+        orderId:order.id,
+        status:'success',
+        totalPrice:order.totalOrderPrice
+    })
+   
+    res.redirect(`http://localhost:4200/paymentSuccess/${payment._id}`)
+    // res.status(201).json({success:'success',data:order})
 })
 
 const getOrderes=AsyncHandler(async(req,res,next)=>{
-    console.log("inside orderController : ",req.filterObj)
     const orders= await getOrdersServise(req.filterObj);
     res.send(orders);
 });
@@ -64,7 +74,6 @@ const cancelOrder=AsyncHandler(async(req,res,next)=>{
     if(!orderId)
         return next(new customError("orderId required")); 
     const order=await getOrderByIdServise(orderId);
-    console.log("order",order);
     if(order.length==0)return next(new customError("there is no such a order for this user"));
     if(order.user.toString()===req.user.id)
     {
@@ -81,8 +90,40 @@ const cancelOrder=AsyncHandler(async(req,res,next)=>{
         res.status(200).json({status:"success",data:updatedOrder})
     }
     else
-        return next(new customError("there is no such a order for this user"));
+        return next(new customError("there is no such an order for this user"));
  
 })
 
-module.exports={createOrder,getOrderes,getOrderById,cancelOrder}
+const updatePayStatus=AsyncHandler(
+    async(req,res,next)=>{
+        const order=await getOrderByIdServise(req.params.id);
+        if(!order)
+         return next(new customError("there is no such an order for this OrderID"));
+        order.isPaid=true;
+        order.paidAt=Date.now();
+       const updatedOrder= await order.save();
+        res.status(201).json({
+            success: true,
+            message: 'order updated successfully',
+            data: updatedOrder 
+          });    
+        }
+)
+
+const updateDelivredStatus=AsyncHandler(
+    async(req,res,next)=>{
+        const order=await getOrderByIdServise(req.params.id);
+        if(!order)
+         return next(new customError("there is no such an order for this OrderID"));
+        order.isDelivred=true;
+        order.delivredAt=Date.now();
+       const updatedOrder= await order.save();
+        res.status(201).json({
+            success: true,
+            message: 'order updated successfully',
+            data: updatedOrder 
+          });    
+        }
+)
+
+module.exports={createOrder,getOrderes,getOrderById,cancelOrder,updatePayStatus,updateDelivredStatus}

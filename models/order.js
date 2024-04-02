@@ -25,16 +25,6 @@ const orderSchema=new mongoose.Schema({
             default:0
         },
         totalOrderPrice:Number,
-    paymentMethod:{
-            type:String,
-            enum:['cash','card'],
-            default:'cash'
-        },
-        isPaid:{
-            type:Boolean,
-            default:false
-        },
-        paidAt:Date,
         isDelivred:{
             type:Boolean,
             default:false
@@ -44,12 +34,10 @@ const orderSchema=new mongoose.Schema({
             default:"pending"
         },
         shippingAddress:{
-            details:String,
-            phone:Number,
-            city:String
+      type:String
 
         },
-        delivred:Date}
+        delivredAt:Date}
         ,{timestamps:true}
 )
 const Order=mongoose.model('Order',orderSchema)
