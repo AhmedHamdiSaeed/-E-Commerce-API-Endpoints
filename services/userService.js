@@ -7,8 +7,8 @@ const createUserService = async ({ fname, lname, email, passwordHash, role }) =>
   }
 };
 
-const findUserService = async (email) => {
-  return await User.findOne({ email }).select('+password');
+const findUserService = async (userID) => {
+  return await User.findById(userID);
 };
 
 const getAllUserservices = async (email) => {
