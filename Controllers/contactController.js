@@ -24,21 +24,19 @@ exports.sendEmail = async (req, res) => {
       from: 'radwareda442@gmail.com',
       to: email,
       subject: 'Your Subject Here',
-      text: 'Your Email Message Here'
+      text: message
     
     };
 
     transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.error('Error sending email:', error);
-        res.status(500).send('Error sending email');
-      } else {
+      if (info) {
         console.log('Email sent: ' + info.response);
         res.send('Email sent and saved successfully');
+        res.json(info.response);
       }
     });
   } catch (error) {
     console.error('Error saving email:', error);
-    res.status(500).send('Error saving email');
+    res.status(500).json({ error: error.message });
   }
 };
