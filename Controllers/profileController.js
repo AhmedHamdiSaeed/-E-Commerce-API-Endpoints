@@ -1,7 +1,9 @@
 const userService = require("../services/userService");
-const ProfileService=require('../services/profileService')
+const {ProfileService,getUserForUpdateService}=require('../services/profileService')
 const profileValidator = require('../validation/profile.validator');
 const bcrypt = require("bcrypt");
+const expressAsyncHandler = require("express-async-handler");
+const CustomError = require("../Utils/CustomError");
 const getCurrentUser= async (req, res) => {
     try {
         console.log("userID",req.user._id)
@@ -17,7 +19,7 @@ const updateProfile = async (req, res) => {
         const { error } = profileValidator.validate(req.body);
         if (error) throw error;
 
-         const { fname, lname, email, password } = req.body;
+         const { fname, lname, email, password ,image,address} = req.body;
          const passwordHash = await bcrypt.hash(password, 10);
         const user = await ProfileService.updateProfile(req.params.id, {
           fname,
@@ -32,8 +34,19 @@ const updateProfile = async (req, res) => {
         res.status(400).send(error.message);
     }
 };
+const getUserForUpdate=expressAsyncHandler( async(req,res,next)=>{
+    const user= await getUserForUpdateService(req.user._id);
+
+    if(!user)
+    {next(new CustomError('not found'),404)}
+    else
+    {
+        res.send(user);
+    }
+})
+
 
 module.exports = {
   getCurrentUser,
-  updateProfile,
+  updateProfile,getUserForUpdate
 };

@@ -3,7 +3,9 @@ const User = require('../models/User');
 const createProfile = async userData => {
     return await User.create(userData);
 };
-
+const getUserForUpdateService=async(id)=>{
+   return await User.findById(id).select('fname lname email password address image')
+}
 const updatedUser = {
   fname: { type: String },
   lname: { type: String },
@@ -20,5 +22,5 @@ const updateProfile = async (email, updatedUser) => {
 
 module.exports = {
   createProfile,
-  updateProfile
+  updateProfile,getUserForUpdateService
 };
