@@ -50,31 +50,23 @@ const login = async (req, res) => {
       return res
         .status(422)
         .send({ message: "Please provide both email and password." });
-        
 
-    const user = await findUserService(email);
+    const user = await findUserService(email);console.log(user);
     if (!user)
       return res.status(401).send({ message: "Incorrect email or password." });
 
     const isValidPassword = await bcrypt.compare(password, user.password);
-
     if (!isValidPassword)
       return res.status(401).send({ message: "Incorrect email or password." });
 
-    // @ts-ignore
-    const token = jwt.sign({ email },process.env.TOKEN_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ email }, process.env.TOKEN_SECRET, { expiresIn: "1h" });
 
-    res
-      // .header("jwt", token)
-      .send({ token: token,expiresIn: "1" , message: "Access granted", user: user});
+    res.send({ token: token, expiresIn: "1", message: "Access granted", user: user });
   } catch (error) {
-    res
-      .status(500)
-      .send({
-        message: error.message || "An error occurred while logging in.",
-      });
+    res.status(500).send({ message: error.message || "An error occurred while logging in." });
   }
 };
+
 
 
 const getAllUsers = async (req , res , next)=>{

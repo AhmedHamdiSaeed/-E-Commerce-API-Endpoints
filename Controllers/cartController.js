@@ -74,68 +74,62 @@ const getCart= asyncHander(async(req,res)=>{
 // });
 
 const createNewCart = asyncHander(async (req, res, next) => {
-    const products = req.body;
-    const { email } = req.user;
-  
-    // Validate each product in the request body
+  const products = req.body;
+  const { email } = req.user;
+
+  // Validate each product in the request body
+  for (const product of products) {
+    const { productId, quantity } = product;
+    const { error } = newCartVaildatin(product);
+    if (error) {
+      return res.status(400).send({ message: error.details[0].message });
+    }
+
+    const productInfo = await Product.findById(productId);
+    if (!productInfo) {
+      return res.status(404).send({ message: `Product with ID ${productId} not found` });
+    }
+
+    if (quantity > productInfo.quantity) {
+      return res.status(400).send({ message: `Requested quantity exceeds available quantity for product with ID ${productId}` });
+    }
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+
+    // Create a new cart for the user
+    const cart = await Cart.create({ user: user._id, cartItems: [] });
+
+    // Add the new products to the cart
     for (const product of products) {
       const { productId, quantity } = product;
-      const { error } = newCartVaildatin(product);
-      if (error) {
-        return res.status(400).send({ message: error.details[0].message });
-      }
-  
       const productInfo = await Product.findById(productId);
-      if (!productInfo) {
-        return res.status(404).send({ message: `Product with ID ${productId} not found` });
-      }
-  
-      if (quantity > productInfo.quantity) {
-        return res.status(400).send({ message: `Requested quantity exceeds available quantity for product with ID ${productId}` });
-      }
-    }
-  
-    try {
-      const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(404).send({ message: 'User not found' });
-      }
-  
-      let cart = await Cart.findOne({ user: user._id });
-      if (!cart) {
-        cart = await Cart.create({ user: user._id, cartItems: [] });
-      }
-  
-      for (const product of products) {
-        const { productId, quantity } = product;
-        const existingItem = cart.cartItems.find(item => item.product.toString() === productId);
-        const productInfo = await Product.findById(productId);
-  
-        if (existingItem) {
-          existingItem.quantity += quantity;
-        } else {
-          cart.cartItems.push({
-            product: productInfo._id,
-            title: productInfo.title,
-            price: productInfo.price,
-            quantity: quantity
-          });
-        }
-      }
-  
-      let totalPrice = 0;
-      cart.cartItems.forEach(item => {
-        totalPrice += item.quantity * item.price;
+
+      cart.cartItems.push({
+        product: productInfo._id,
+        title: productInfo.title,
+        price: productInfo.price,
+        quantity: quantity
       });
-      cart.totalprice = totalPrice;
-  
-      await cart.save();
-  
-      res.send({ numOfCartItems: cart.cartItems.length, data: cart });
-    } catch (error) {
-      return next(new ApiError('Internal Server Error', 500));
     }
-  });
+
+    let totalPrice = 0;
+    cart.cartItems.forEach(item => {
+      totalPrice += item.quantity * item.price;
+    });
+    cart.totalprice = totalPrice;
+
+    await cart.save();
+
+    res.send({ numOfCartItems: cart.cartItems.length, data: cart });
+  } catch (error) {
+    return next(new ApiError('Internal Server Error', 500));
+  }
+});
 
 
 

@@ -17,7 +17,7 @@ const productRoutes = require("./routes/productRoutes");
 const ordersRoutes = require("./routes/ordersRoutes");
 const CategoryRoutes = require("./routes/categoryRoutes");
 const AdminRouter = require("./routes/adminRoutes");
-
+const paymentRoutes=require('./routes/paymentRoutes')
 const emailRoutes = require("./routes/contactRoutes");
 
 const reviewRoutes=require('./routes/reviewRoutes');
@@ -54,8 +54,8 @@ app.use("/api/v1/search", searchRoute);
 ////////////////   radwa
 
 ////////// ahmed
- 
 app.use("/api/v1/orders", ordersRoutes);
+app.use("/api/v1/payment",paymentRoutes)
 app.use("/api/v1/review",reviewRoutes)
 ///////////emad
 app.use("/api/v1/category", CategoryRoutes);
