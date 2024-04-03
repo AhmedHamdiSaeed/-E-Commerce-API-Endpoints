@@ -17,7 +17,7 @@ const getOrderByIdWithProducts=AsyncHandler(
        const order= await getOrderByIdWithProductsService(req.params.id);
         if(!order)
         {
-            newxt(customError('not found',404))
+            next(customError('not found',404))
         }
         res.send(order);
     }
@@ -75,7 +75,7 @@ const getOrderById=AsyncHandler(async(req,res,next)=>{
     if(!orderId)
         return next(new customError("orderId required")); 
     const order=await getOrderByIdServise(orderId);
-    if(order.user.toString() ===req.user.id)
+    if(order.user.toString() ===req.user.id || req.user.role === 'admin')
         res.send(order)
     else
     return next(new customError("there is no such a order for this user"))       
@@ -85,8 +85,8 @@ const cancelOrder=AsyncHandler(async(req,res,next)=>{
     if(!orderId)
         return next(new customError("orderId required")); 
     const order=await getOrderByIdServise(orderId);
-    if(order.length==0)return next(new customError("there is no such a order for this user"));
-    if(order.user.toString()===req.user.id)
+    if(order.length==0)return next(new customError("there is no such a order "));
+    if(order.user.toString()===req.user.id || req.user.role === 'admin')
     {
         order.status="Canceled";
           //decrement Sold and increment quantity in Product
