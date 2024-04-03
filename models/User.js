@@ -1,3 +1,4 @@
+const { string } = require('joi');
 const mongoose = require('mongoose');
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // const passwordRegex = /[a-zA-Z0-9]{6,}/;
@@ -35,9 +36,9 @@ const userSchema = new mongoose.Schema({
     default: 'uploads/user.png'
   },
   address:{
-    type:String,
-    require:true
-  }
+   city:{type:String},
+   postalCode:{type:String},
+   street:{type:String}}
 });
 
 
