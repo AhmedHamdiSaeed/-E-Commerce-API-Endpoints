@@ -36,7 +36,10 @@ const orderSchema=new mongoose.Schema({
         shippingAddress:{
       type:String
 
-        },
+        },  orderAt: {
+            type: Date,
+            default:Date.now()
+          },
         delivredAt:Date}
         ,{timestamps:true}
 )
