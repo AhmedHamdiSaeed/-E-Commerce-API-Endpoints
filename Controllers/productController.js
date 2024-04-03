@@ -89,26 +89,48 @@ const createProduct = async (req, res) => {
     res.status(error.statusCode || 400).json({ error: error.message });
    }}
 
-const updateProduct = async (req, res) => {
-  try {
-    // Check if the user is an admin
-    if (req.user.role !== 'admin') {
-      throw new CustomError('Only admins can update products', 403);
+   const updateProduct = async (req, res) => {
+    try {
+      // Check if the user is an admin
+      if (req.user.role !== 'admin') {
+        throw new CustomError('Only admins can update products', 403);
+      }
+  
+      upload(req, res, async (err) => {
+        if (err) {
+          return res.status(400).json({ error: err });
+        } else {
+          try {
+            const productId = req.params.id;
+            const updatedFields = req.body;
+            
+            // Check if file is uploaded
+            if (req.file) {
+              // Save the uploaded image to the server
+              const imagePath = req.file.path;
+              updatedFields.image = imagePath;
+            }
+  
+            const product = await updateProductService(productId, updatedFields);
+            if (!product) {
+              throw new CustomError(`No product with id: ${productId}`, 404);
+            }
+            res.json(product);
+            
+          } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+          }
+        }
+      });
+    } catch (error) {
+      res.status(error.statusCode || 400).json({ error: error.message });
     }
-
-    const product = await updateProductService(req.params.id, req.body);
-    if (!product) {
-      throw new CustomError(`No product with id: ${req.params.id}`, 404);
-    }
-    res.json(product);
-  } catch (error) {
-    res.status(error.statusCode || 400).json({ error: error.message });
-  }
-};
+  };
+  
 
 const deleteProduct = async (req, res) => {
   try {
-    // Check if the user is an admin
     if (req.user.role !== 'admin') {
       throw new CustomError('Only admins can delete products', 403);
     }
@@ -129,5 +151,5 @@ module.exports = {
   updateProduct,
   createProduct,
   deleteProduct,
-  getProductsByCategory
+  getProductsByCategory,
 };
