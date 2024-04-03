@@ -11,9 +11,14 @@ const paymentSchema=new mongoose.Schema(
             enum:['success','field'],
             required:true
          },
-         totalPrice:Number
+         totalPrice:Number,
+         paidAt: {
+            type: Date,
+            default:Date.now()
+          }
     }
     ,{timestamps:true}
 )
 
-module.exports=mongoose.model('Payment',paymentSchema)
+Payment=mongoose.model('Payment',paymentSchema)
+module.exports=Payment;

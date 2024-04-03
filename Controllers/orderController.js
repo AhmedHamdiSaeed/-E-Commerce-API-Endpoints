@@ -4,12 +4,24 @@ const Cart=require("../models/cart");
 const AsyncHandler = require("express-async-handler");
 const customError = require("../Utils/CustomError");
 const Product = require("../models/Product");
-const { getOrderByIdServise,getOrdersServise} = require("../services/orderService");
+const { getOrderByIdServise,getOrdersServise,getOrderByIdWithProductsService} = require("../services/orderService");
 const Payment = require("../models/payment");
 const payment = require("../models/payment");
 const User = require("../models/User");
 require("dotenv").config()
 const stripe= require('stripe')('sk_test_51OoAdfHKyTd2gxdff0ItjSCSspETGmOHRAdVfdWai1V9XgzUkfMoMeZDXPcqV6yFxq8GYeziBX5FLDXTYKgy30BZ00dh7Rbr7W');
+
+
+const getOrderByIdWithProducts=AsyncHandler(
+    async(req,res,next)=>{
+       const order= await getOrderByIdWithProductsService(req.params.id);
+        if(!order)
+        {
+            newxt(customError('not found',404))
+        }
+        res.send(order);
+    }
+)
 
 const createOrder=AsyncHandler(async(req,res,next)=>{
     const cartId=req.params.cartID;
@@ -50,7 +62,6 @@ const createOrder=AsyncHandler(async(req,res,next)=>{
     })
    
     res.redirect(`http://localhost:4200/paymentSuccess/${payment._id}`)
-    // res.status(201).json({success:'success',data:order})
 })
 
 const getOrderes=AsyncHandler(async(req,res,next)=>{
@@ -126,4 +137,4 @@ const updateDelivredStatus=AsyncHandler(
         }
 )
 
-module.exports={createOrder,getOrderes,getOrderById,cancelOrder,updatePayStatus,updateDelivredStatus}
+module.exports={createOrder,getOrderes,getOrderById,cancelOrder,updatePayStatus,updateDelivredStatus,getOrderByIdWithProducts}

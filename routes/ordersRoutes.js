@@ -1,13 +1,13 @@
 const express=require("express");
 const router=express.Router();
-const {createOrder,getOrderes,getOrderById,cancelOrder,updatePayStatus,updateDelivredStatus}=require("../Controllers/orderController");
+const {createOrder,getOrderes,getOrderById,cancelOrder,updatePayStatus,updateDelivredStatus,getOrderByIdWithProducts}=require("../Controllers/orderController");
 const {filterObject}=require('../services/orderService')
 const { auth } = require("../middleware/auth");
 const { isAdmin } = require("../middleware/AdminUserAuth");
 
 
-//Get a list of orders (admin only)
 router.get("/",auth,filterObject,getOrderes)
+router.get('/products/:id',auth,getOrderByIdWithProducts)
 //create order
 router.post("/",auth,createOrder)
 //Get details of a specific order.

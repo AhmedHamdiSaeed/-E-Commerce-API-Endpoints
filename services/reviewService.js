@@ -1,4 +1,3 @@
-const review = require('../models/review');
 const Review = require('../models/review');
 
 const setProductIdandUserIdInBody=(req,res,next)=>{

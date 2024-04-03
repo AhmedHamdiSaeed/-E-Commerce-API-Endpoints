@@ -6,7 +6,9 @@ const CustomError = require('../Utils/CustomError');
 
 
 
-
+const getOrderByIdWithProductsService=async(id)=>{
+        return await Order.findById(id).populate('cartItems.product').exec();
+}
 const checkoutSessionService=AsyncHandler(
     async(req,res,next)=>{
 
@@ -62,4 +64,4 @@ const getOrderByIdServise=async(orderId)=>{
     return await Order.findById(orderId)
 }
 
-module.exports={getOrdersServise,getOrderByIdServise,filterObject,checkoutSessionService}
+module.exports={getOrdersServise,getOrderByIdServise,filterObject,checkoutSessionService,getOrderByIdWithProductsService}
