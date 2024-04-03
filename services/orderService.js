@@ -58,7 +58,7 @@ const filterObject=(req,res,next)=>{
     next();
 }
 const getOrdersServise=async(filetrObj)=>{
-    return await Order.find(filetrObj);
+    return await Order.find(filetrObj).populate('user').populate('cartItems.product');
 }
 const getOrderByIdServise=async(orderId)=>{
     return await Order.findById(orderId)
