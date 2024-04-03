@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
   image:{
     type: String,
     default: 'images/user.png'
+  },
+  address:{
+    type:String,
+    require:true
   }
 });
 

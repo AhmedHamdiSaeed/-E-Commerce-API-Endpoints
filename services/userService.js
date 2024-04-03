@@ -7,6 +7,11 @@ const createUserService = async ({ fname, lname, email, passwordHash, role }) =>
   }
 };
 
+const findUserServiceProfile = async (userID) => {
+  return await User.findById(userID);
+};
+
+
 const findUserService = async (email) => {
   return await User.findOne({ email }).select('+password');
 };
@@ -23,5 +28,6 @@ module.exports = {
   createUserService,
   findUserService,
   getAllUserservices,
-  deleteUSerServices 
+  deleteUSerServices ,
+  findUserServiceProfile
 };

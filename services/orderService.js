@@ -6,7 +6,9 @@ const CustomError = require('../Utils/CustomError');
 
 
 
-
+const getOrderByIdWithProductsService=async(id)=>{
+        return await Order.findById(id).populate('cartItems.product').exec();
+}
 const checkoutSessionService=AsyncHandler(
     async(req,res,next)=>{
 
@@ -16,13 +18,15 @@ const checkoutSessionService=AsyncHandler(
             {
                 next(new CustomError('not found this cart',404))
             }
-
+            console.log("berfore create seesion cart :",cart)
             const items=cart.cartItems.map((item)=>{
                 return {                  
                         price_data: {
                           currency: 'egp',
                           product_data: {
                             name: item.product.title,
+                            images:[`${req.protocol}://${req.get('host')}/api/v1/images/${item.product.image}`],
+                            description:item.product.description
                           },
                           unit_amount: item.price*100,
                         },
@@ -32,13 +36,11 @@ const checkoutSessionService=AsyncHandler(
             const session = await stripe.checkout.sessions.create({
             line_items: items,
             mode: 'payment',
-            success_url: 'http://localhost:3000/success',
-            cancel_url: 'http://localhost:3000/cancel',
+            success_url: `${req.protocol}://${req.get('host')}/api/v1/payment/success/${req.params.cartID}`,
+            cancel_url: `http://localhost:4200/cart`,
             customer_email: req.user.email,
             client_reference_id:req.params.cartID,
-            metadata: {
-                shipping_address: req.body.shipping_address,
-            },
+         
           });
           res.json({status:"success",session})
     }
@@ -52,15 +54,14 @@ const filterObject=(req,res,next)=>{
         console.log("filter var",filter)
     }
     req.filterObj=filter;
-    console.log("req.filterObj :  ",req.filterObj)
     
     next();
 }
 const getOrdersServise=async(filetrObj)=>{
-    return await Order.find(filetrObj);
+    return await Order.find(filetrObj).populate('user').populate('cartItems.product');
 }
 const getOrderByIdServise=async(orderId)=>{
     return await Order.findById(orderId)
 }
 
-module.exports={getOrdersServise,getOrderByIdServise,filterObject,checkoutSessionService}
+module.exports={getOrdersServise,getOrderByIdServise,filterObject,checkoutSessionService,getOrderByIdWithProductsService}

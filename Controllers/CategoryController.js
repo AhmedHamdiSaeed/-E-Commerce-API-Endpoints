@@ -37,6 +37,8 @@ const getCategoryById = async (req, res) => {
     if (req.user.role !== 'admin') {
       throw new CustomError('Only admins can create products', 403);
     }
+    // console.log(req.bogy)
+    // console.log(req.file)
 
     upload(req, res, async (err) => {
       if (err) {
@@ -49,10 +51,11 @@ const getCategoryById = async (req, res) => {
         }
 
         const imagePath = req.file.path ;
+        // console.log(name , imagePath)
 
        const newCategory = {
         name,
-        imagePath
+        image : imagePath
        }
 
         const category = await CreateCategoryService(newCategory)
