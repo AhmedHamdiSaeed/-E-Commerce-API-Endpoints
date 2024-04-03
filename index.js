@@ -2,7 +2,6 @@ const express = require("express");
 require("dotenv").config();
 require("./db/index");
 const cors = require("cors");
-const Cors = require("cors");
 const CustomError = require("./Utils/CustomError");
 const errorHandler = require("./middleware/errorMiddleware");
  const compression=require('compression')
