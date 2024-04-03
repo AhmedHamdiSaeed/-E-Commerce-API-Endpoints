@@ -33,8 +33,10 @@ const updateProductService = async (productId, updatedData) => {
 };
 
 const deleteProductService = async (productId) => {
+  console.log('Deleting product with ID:', productId);
   return await Product.findByIdAndDelete(productId);
 };
+
 
 module.exports = {
     getProductsService,

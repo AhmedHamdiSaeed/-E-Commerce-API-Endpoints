@@ -74,5 +74,3 @@ process.on("unhandledRejection", (err) => {
   // @ts-ignore
   console.log(`error: ${err.name} , message : ${err.message}`);
 });
-
-

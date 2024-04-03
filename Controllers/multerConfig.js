@@ -16,12 +16,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5000000 }, // Limiting file size to 5MB
+  limits: { fileSize: 5000000 }, 
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   }
-}).single('image'); // 'image' should match the name attribute in your form field for image upload
-
+}).single('image'); 
 
 
 function checkFileType(file, cb) {
