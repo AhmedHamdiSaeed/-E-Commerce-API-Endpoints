@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
   },
   image:{
     type: String,
-    default: 'images/user.png'
+    default: 'uploads/user.png'
   },
   address:{
     type:String,
