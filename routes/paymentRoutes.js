@@ -7,7 +7,7 @@ const router=express.Router();
 
 router.get('/:id',getPaymentByIdController)
 router.get("/checkout/:cartID",auth,checkoutSessionService)
-router.get("/result",)
+// router.get("/result",)
 router.get("/success/:cartID",createOrder)    //go to ceate order and create payment documnet
 module.exports=router;
 
