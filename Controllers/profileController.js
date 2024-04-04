@@ -1,9 +1,10 @@
 const userService = require("../services/userService");
-const {ProfileService,getUserForUpdateService}=require('../services/profileService')
+const {updateProfileService,getUserForUpdateService}=require('../services/profileService')
 const profileValidator = require('../validation/profile.validator');
 const bcrypt = require("bcrypt");
 const expressAsyncHandler = require("express-async-handler");
 const CustomError = require("../Utils/CustomError");
+const User = require("../models/User");
 const getCurrentUser= async (req, res) => {
     try {
         console.log("userID",req.user._id)
@@ -15,24 +16,20 @@ const getCurrentUser= async (req, res) => {
     }
 };
 const updateProfile = async (req, res) => {
-    try {
-        const { error } = profileValidator.validate(req.body);
-        if (error) throw error;
+    const updates=req.body
 
-         const { fname, lname, email, password ,image,address} = req.body;
-         const passwordHash = await bcrypt.hash(password, 10);
-        const user = await ProfileService.updateProfile(req.params.id, {
-          fname,
-          lname,
-          email,
-          passwordHash
-        });
-        if (!user) throw new Error('User not found');
-
-        res.json(user);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
+    if (!updates || Object.keys(updates).length === 0) {
+        return res.status(400).json({ message: 'No updates provided' });
+      }
+      let passwordHash=null;
+      if(updates.password)
+      {
+        passwordHash = await bcrypt.hash(updates.password, 10);
+        updates.password=passwordHash;
+      }
+      const userUpdated= await User.findByIdAndUpdate(req.user._id,updates,{new:true});
+        res.json(userUpdated);
+   
 };
 const getUserForUpdate=expressAsyncHandler( async(req,res,next)=>{
     const user= await getUserForUpdateService(req.user._id);

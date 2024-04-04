@@ -2,15 +2,16 @@ require('dotenv').config();
 
 const stripe = require('stripe')(process.env.StripeSecret);
 const AsyncHandler = require('express-async-handler');
-const Order=require("../models/order");
+const Order = require("../models/order");
 const Cart = require('../models/cart');
 const CustomError = require('../Utils/CustomError');
 
 
 
-const getOrderByIdWithProductsService=async(id)=>{
-        return await Order.findById(id).populate('cartItems.product').exec();
+const getOrderByIdWithProductsService = async (id) => {
+    return await Order.findById(id).populate('cartItems.product').exec();
 }
+
 const checkoutSessionService = AsyncHandler(
     async (req, res, next) => {
         try {
@@ -19,7 +20,7 @@ const checkoutSessionService = AsyncHandler(
                 throw new CustomError('Cart not found', 404);
             }
 
-           // console.log(`${req.protocol}://${req.get('host')}/api/v1/images/${item.product.image}`)
+            // console.log(`${req.protocol}://${req.get('host')}/api/v1/images/${item.product.image}`)
 
             // Construct line items for checkout session
             const items = cart.cartItems.map(item => ({
@@ -36,7 +37,6 @@ const checkoutSessionService = AsyncHandler(
             }));
 
             const successURL = `${req.protocol}://${req.get('host')}/api/v1/payment/success/${req.params.cartID}`;
-
             const session = await stripe.checkout.sessions.create({
                 line_items: items,
                 mode: 'payment',
@@ -57,23 +57,22 @@ const checkoutSessionService = AsyncHandler(
     }
 );
 
-const filterObject=(req,res,next)=>{
-     filter={};
-    if(req.user.role==='user')
-    {
+const filterObject = (req, res, next) => {
+    filter = {};
+    if (req.user.role === 'user') {
         console.log(req.user._id);
-        filter={user:req.user._id};
-        console.log("filter var",filter)
+        filter = { user: req.user._id };
+        console.log("filter var", filter)
     }
-    req.filterObj=filter;
-    
+    req.filterObj = filter;
+
     next();
 }
-const getOrdersServise=async(filetrObj)=>{
+const getOrdersServise = async (filetrObj) => {
     return await Order.find(filetrObj).populate('user').populate('cartItems.product');
 }
-const getOrderByIdServise=async(orderId)=>{
+const getOrderByIdServise = async (orderId) => {
     return await Order.findById(orderId)
 }
 
-module.exports={getOrdersServise,getOrderByIdServise,filterObject,checkoutSessionService,getOrderByIdWithProductsService}
+module.exports = { getOrdersServise, getOrderByIdServise, filterObject, checkoutSessionService, getOrderByIdWithProductsService }
