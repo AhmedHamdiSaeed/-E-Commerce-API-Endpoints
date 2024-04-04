@@ -12,11 +12,14 @@ const getOrderByIdWithProductsService=async(id)=>{
 const checkoutSessionService=AsyncHandler(
     async(req,res,next)=>{
 
-
             const cart=await Cart.findById(req.params.cartID).populate('cartItems.product').exec();
+          
             if(!cart)
             {
-                next(new CustomError('not found this cart',404))
+            }
+            if(req.user._id.toString()!==cart.user.toString())
+            {
+                next(new CustomError('not allow this cartID becuase userID of cart is not your userID',404))
             }
             console.log("berfore create seesion cart :",cart)
             const items=cart.cartItems.map((item)=>{
@@ -25,7 +28,6 @@ const checkoutSessionService=AsyncHandler(
                           currency: 'egp',
                           product_data: {
                             name: item.product.title,
-                            images:[`${req.protocol}://${req.get('host')}/api/v1/images/${item.product.image}`],
                             description:item.product.description
                           },
                           unit_amount: item.price*100,

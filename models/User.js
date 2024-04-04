@@ -8,6 +8,7 @@ const name = {
   required: true,
   minLength: 3,
   maxLength: 25,
+  default:''
 };
 const userSchema = new mongoose.Schema({
   fname: name,
@@ -36,9 +37,13 @@ const userSchema = new mongoose.Schema({
     default: 'uploads/user.png'
   },
   address:{
-   city:{type:String},
-   postalCode:{type:String},
-   street:{type:String}}
+   city:{type:String,
+    default:''
+  },
+   postalCode:{type:String,
+    default:''},
+   street:{type:String,
+    default:''}}
 });
 
 

@@ -14,7 +14,7 @@ const updatedUser = {
   role:{type:String}
 };
 
-const updateProfile = async (email, updatedUser) => {
+const updateProfileService = async (email, updatedUser) => {
   return await User.findByIdAndUpdate(email, updatedUser, {
     new: true,
   });
@@ -22,5 +22,5 @@ const updateProfile = async (email, updatedUser) => {
 
 module.exports = {
   createProfile,
-  updateProfile,getUserForUpdateService
+  updateProfileService,getUserForUpdateService
 };
