@@ -13,7 +13,7 @@ const findUserServiceProfile = async (userID) => {
 
 
 const findUserService = async (email) => {
-  return await User.findOne({ email }).select('+password');
+  return await User.findOne({email}).select('+password');
 };
 
 const getAllUserservices = async (email) => {
