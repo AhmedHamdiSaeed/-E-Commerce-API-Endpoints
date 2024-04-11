@@ -18,26 +18,12 @@ const getCurrentUser= async (req, res) => {
     }
 };
 const updateProfile = async (req, res) => {
-    const updates=req.body
-
-    if (!updates || Object.keys(updates).length === 0) {
-         res.status(400).json({ message: 'No updates provided' });
-      }
-   
-
-
-
-      upload(req, res, async (err) => {
-      
-            
-            // Check if file is uploaded
+      upload(req, res, async (err) => {    
+        const updates=req.body
             if (req.file) {
-              // Save the uploaded image to the server
               const imagePath = req.file.path;
-              console.log("image path : ",imagePath)
               updates.image = imagePath;
             }
-            console.log('after',req.file.path)
       const userUpdated= await User.findByIdAndUpdate(req.user._id,updates,{new:true});
        res.json({
         "status": 200,
