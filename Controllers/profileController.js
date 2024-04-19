@@ -24,6 +24,11 @@ const updateProfile = async (req, res) => {
               const imagePath = req.file.path;
               updates.image = imagePath;
             }
+            if(updates.password)
+            {
+              const passwordHash = await bcrypt.hash(updates.password, 10);
+              updates.password=passwordHash;
+            }
       const userUpdated= await User.findByIdAndUpdate(req.user._id,updates,{new:true});
        res.json({
         "status": 200,
