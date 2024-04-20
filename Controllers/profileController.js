@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const expressAsyncHandler = require("express-async-handler");
 const CustomError = require("../Utils/CustomError");
 const User = require("../models/User");
+const upload = require('./multerConfig') ;
 
 const getCurrentUser= async (req, res) => {
     try {
@@ -18,21 +19,26 @@ const getCurrentUser= async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-    const updates=req.body
-
-    if (!updates || Object.keys(updates).length === 0) {
-        return res.status(400).json({ message: 'No updates provided' });
-      }
-      let passwordHash=null;
-      if(updates.password)
-      {
-        passwordHash = await bcrypt.hash(updates.password, 10);
-        updates.password=passwordHash;
-      }
+      upload(req, res, async (err) => {    
+        const updates=req.body
+            if (req.file) {
+              const imagePath = req.file.path;
+              updates.image = imagePath;
+            }
+            if(updates.password)
+            {
+              const passwordHash = await bcrypt.hash(updates.password, 10);
+              updates.password=passwordHash;
+            }
       const userUpdated= await User.findByIdAndUpdate(req.user._id,updates,{new:true});
-        res.json(userUpdated);
-   
-};
+       res.json({
+        "status": 200,
+        "message": "updated",
+        "data": 
+        userUpdated      
+      })   ;
+      return;
+})};
 const getUserForUpdate=expressAsyncHandler( async(req,res,next)=>{
     const user= await getUserForUpdateService(req.user._id);
 

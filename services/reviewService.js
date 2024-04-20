@@ -26,13 +26,13 @@ const createfilterObject=(req,res,next)=>{
     next();
 }
 const createReviewService=async(newReview)=>{
-    await Review.create(newReview);
+   return await Review.create(newReview);
 }
 
 const updateReviewService=async(id,updatedData)=>{
    const updatedReview= await Review.findByIdAndUpdate(id,updatedData,{new:true})
-   console.log("updatedReview: ",updatedReview)
     updatedReview.save();
+    return updatedReview;
 }
 const getReviewByIdService=async(id,req)=>{
     filter={id};

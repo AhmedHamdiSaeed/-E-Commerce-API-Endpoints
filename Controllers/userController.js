@@ -95,9 +95,34 @@ const deleteUser = AsyncHandler( async (req , res , next)=>{
   
 })
 
+const checkEmailController=AsyncHandler(
+  async(req,res,next)=>{
+    const {email}=req.body;
+    console.log('email : ',email);
+    const user=await User.findOne({email});
+    console.log("useremail: ",user)
+    if(!user)
+    {
+      res.json({
+        "status": 200,
+        "message": "notFound"  
+      });
+    }
+    else{
+      res.json({
+        "status": 200,
+        "message": "found",
+        "data": 
+          user.email   
+      });
+    }
+  }
+)
+
 module.exports = {
   register,
   login,
   getAllUsers,
-  deleteUser
+  deleteUser,
+  checkEmailController
 };

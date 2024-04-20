@@ -14,16 +14,26 @@ const getReviews=AsyncHandler(
 )
 const createReview=AsyncHandler(
    async (req,res,next)=>{
-        await createReviewService(req.body)
-        res.send('created')
+       const review= await createReviewService(req.body)
+        res.json({
+            "status": 200,
+            "message": "Success",
+            "data": 
+             review      
+          })
         return;
     }
 )
 
 const updateReview=AsyncHandler(
     async(req,res,next)=>{
-        await updateReviewService(req.params.id,req.body)
-        res.status(200).send('updated');
+      const review= await updateReviewService(req.params.id,req.body)
+        res.json({
+            "status": 200,
+            "message": "Success",
+            "data": 
+             review      
+          })
         return;
     }
 )
