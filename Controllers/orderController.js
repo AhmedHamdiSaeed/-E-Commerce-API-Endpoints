@@ -4,7 +4,7 @@ const Cart=require("../models/cart");
 const AsyncHandler = require("express-async-handler");
 const customError = require("../Utils/CustomError");
 const Product = require("../models/Product");
-const { getOrderByIdServise,getOrdersServise,getOrderByIdWithProductsService} = require("../services/orderService");
+const { getOrderByIdServise,getOrdersByUserIdServise,getOrdersServise,getOrderByIdWithProductsService} = require("../services/orderService");
 const Payment = require("../models/payment");
 const payment = require("../models/payment");
 const User = require("../models/User");
@@ -23,6 +23,15 @@ const getOrderByIdWithProducts=AsyncHandler(
     }
 )
 
+const getOrdersByUserId = AsyncHandler(async (req , res , next)=>{
+    const {userId} = req.body ; 
+    const orders = await getOrdersByUserIdServise(userId)
+    if(!orders)
+    {
+        next(customError('not found',404))
+    }
+    res.send(orders);
+})
 const createOrder=AsyncHandler(async(req,res,next)=>{
     const cartId=req.params.cartID;
     if(!cartId)
@@ -137,4 +146,4 @@ const updateDelivredStatus=AsyncHandler(
         }
 )
 
-module.exports={createOrder,getOrderes,getOrderById,cancelOrder,updatePayStatus,updateDelivredStatus,getOrderByIdWithProducts}
+module.exports={createOrder,getOrderes,getOrdersByUserId,getOrderById,cancelOrder,updatePayStatus,updateDelivredStatus,getOrderByIdWithProducts}

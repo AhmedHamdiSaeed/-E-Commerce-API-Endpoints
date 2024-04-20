@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const expressAsyncHandler = require("express-async-handler");
 const CustomError = require("../Utils/CustomError");
 const User = require("../models/User");
+
 const getCurrentUser= async (req, res) => {
     try {
         console.log("userID",req.user._id)
@@ -15,6 +16,7 @@ const getCurrentUser= async (req, res) => {
         res.status(404).send(error.message );
     }
 };
+
 const updateProfile = async (req, res) => {
     const updates=req.body
 

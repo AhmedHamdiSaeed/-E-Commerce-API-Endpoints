@@ -71,8 +71,17 @@ const filterObject = (req, res, next) => {
 const getOrdersServise = async (filetrObj) => {
     return await Order.find(filetrObj).populate('user').populate('cartItems.product');
 }
+
+const getOrdersByUserIdServise = async (userId) => {
+    return await Order.find({user: userId}).populate('user').populate('cartItems.product');
+}
 const getOrderByIdServise=async(orderId)=>{
     return await Order.findById(orderId).populate('user').populate('cartItems.product');
 }
 
-module.exports = { getOrdersServise, getOrderByIdServise, filterObject, checkoutSessionService, getOrderByIdWithProductsService }
+module.exports = { getOrdersServise,
+     getOrderByIdServise,
+      filterObject, 
+      checkoutSessionService, 
+      getOrderByIdWithProductsService,
+      getOrdersByUserIdServise }

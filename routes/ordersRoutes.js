@@ -1,12 +1,13 @@
 const express=require("express");
 const router=express.Router();
-const {createOrder,getOrderes,getOrderById,cancelOrder,updatePayStatus,updateDelivredStatus,getOrderByIdWithProducts}=require("../Controllers/orderController");
+const {createOrder,getOrdersByUserId,getOrderes,getOrderById,cancelOrder,updatePayStatus,updateDelivredStatus,getOrderByIdWithProducts}=require("../Controllers/orderController");
 const {filterObject}=require('../services/orderService')
 const { auth } = require("../middleware/auth");
 const { isAdmin } = require("../middleware/AdminUserAuth");
 
 
 router.get("/",auth,filterObject,getOrderes)
+router.post("/userOrders",auth,isAdmin,getOrdersByUserId) //get orders of a specific user by adimn
 router.get('/products/:id',auth,getOrderByIdWithProducts)
 //create order
 router.post("/",auth,createOrder)
