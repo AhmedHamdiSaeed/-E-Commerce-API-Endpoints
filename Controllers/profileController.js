@@ -6,6 +6,7 @@ const expressAsyncHandler = require("express-async-handler");
 const CustomError = require("../Utils/CustomError");
 const User = require("../models/User");
 const upload = require('./multerConfig') ;
+const jwt = require("jsonwebtoken");
 
 const getCurrentUser= async (req, res) => {
     try {
@@ -21,6 +22,7 @@ const getCurrentUser= async (req, res) => {
 const updateProfile = async (req, res) => {
       upload(req, res, async (err) => {    
         const updates=req.body
+      
             if (req.file) {
               const imagePath = req.file.path;
               updates.image = imagePath;
@@ -30,12 +32,33 @@ const updateProfile = async (req, res) => {
               const passwordHash = await bcrypt.hash(updates.password, 10);
               updates.password=passwordHash;
             }
+            if(updates.email)
+            {
+            //  console.log("user found : ", await User.findOne({"email":updates.email}));
+             const user= await User.findOne({email:updates.email});
+             if(user)
+             {
+              res.json({
+                "status":200,
+                "message":"email exists"
+              })
+              return;
+             }
+          
+            }
       const userUpdated= await User.findByIdAndUpdate(req.user._id,updates,{new:true});
+      objData={"fname":userUpdated.fname,"lname":userUpdated.lname,"email":userUpdated.email,"image":userUpdated.image,"address":userUpdated.address,"role":userUpdated.role}
+      var token;
+      if(updates.email)
+      {
+       token = jwt.sign({ email:userUpdated.email }, process.env.TOKEN_SECRET, { expiresIn: "1h" });
+       Object.assign(objData,{"email":userUpdated.email,"token":token})
+      }
        res.json({
         "status": 200,
         "message": "updated",
         "data": 
-        userUpdated      
+        objData 
       })   ;
       return;
 })};
